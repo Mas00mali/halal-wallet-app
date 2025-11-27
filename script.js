@@ -1,7 +1,22 @@
-// Users data
 let users = [];
 let transactions = [];
 let loggedInUser = null;
+
+// Show / Hide Forms
+function showLogin(){
+  document.getElementById("signupDiv").style.display="none";
+  document.getElementById("loginDiv").style.display="block";
+}
+
+function showSignUp(){
+  document.getElementById("loginDiv").style.display="none";
+  document.getElementById("signupDiv").style.display="block";
+}
+
+// Forgot Password (Simple Alert)
+function forgotPassword(){
+  alert("Please contact admin to reset your password (Qarz-e-Halal compliant).");
+}
 
 // Sign Up
 function handleSignUp() {
@@ -23,25 +38,25 @@ function handleSignUp() {
     return;
   }
 
-  const newUser = {
-    userId, password, name, aadhar, pan, email, mobile,
-    balance: 0
-  };
-  users.push(newUser);
-  alert("Sign up successful! Please login.");
+  users.push({userId, password, name, aadhar, pan, email, mobile, balance:0});
+  alert("Sign Up successful! Please login.");
+  showLogin();
 }
 
 // Login
 function handleLogin() {
   const userId = document.getElementById("loginUserId").value;
   const password = document.getElementById("loginPassword").value;
-
   const user = users.find(u=>u.userId===userId && u.password===password);
-  if(!user) return alert("Invalid credentials");
+
+  if(!user){
+    alert("Invalid credentials!");
+    return;
+  }
 
   loggedInUser = user;
-  document.getElementById("authSection").style.display = "none";
-  document.getElementById("walletSection").style.display = "block";
+  document.getElementById("loginDiv").style.display="none";
+  document.getElementById("walletSection").style.display="block";
   showProfile();
   populateUsers();
   updateBalance();
@@ -50,32 +65,32 @@ function handleLogin() {
 
 // Logout
 function handleLogout() {
-  loggedInUser = null;
-  document.getElementById("authSection").style.display = "block";
-  document.getElementById("walletSection").style.display = "none";
+  loggedInUser=null;
+  document.getElementById("walletSection").style.display="none";
+  showLogin();
 }
 
-// Show Profile
-function showProfile() {
+// Profile
+function showProfile(){
   document.getElementById("profileName").innerText = loggedInUser.name;
-  const ul = document.getElementById("profileDetails");
-  ul.innerHTML = "";
-  for(let key of ["aadhar","pan","email","mobile","userId"]){
-    const li = document.createElement("li");
-    li.textContent = `${key.toUpperCase()}: ${loggedInUser[key]}`;
+  const ul=document.getElementById("profileDetails");
+  ul.innerHTML="";
+  ["aadhar","pan","email","mobile","userId"].forEach(key=>{
+    const li=document.createElement("li");
+    li.textContent=`${key.toUpperCase()}: ${loggedInUser[key]}`;
     ul.appendChild(li);
-  }
+  });
 }
 
-// Populate Users for transfer
-function populateUsers() {
-  const select = document.getElementById("toUser");
-  select.innerHTML = "";
+// Populate Users
+function populateUsers(){
+  const select=document.getElementById("toUser");
+  select.innerHTML="";
   users.forEach(u=>{
-    if(u.userId !== loggedInUser.userId){
-      const option = document.createElement("option");
-      option.value = u.userId;
-      option.textContent = `${u.name} (${u.balance})`;
+    if(u.userId!==loggedInUser.userId){
+      const option=document.createElement("option");
+      option.value=u.userId;
+      option.textContent=`${u.name} (${u.balance})`;
       select.appendChild(option);
     }
   });
@@ -86,58 +101,52 @@ function updateBalance(){
   document.getElementById("balance").innerText = loggedInUser.balance;
 }
 
-// Transaction ID generator
-function generateTxnId() {
-  return 'TXN' + Math.floor(100000 + Math.random() * 900000);
+// Transaction ID Generator
+function generateTxnId(){
+  return "TXN"+Math.floor(100000+Math.random()*900000);
 }
 
 // Transfer
-function handleTransfer() {
-  const toId = document.getElementById("toUser").value;
-  const amount = parseFloat(document.getElementById("amount").value);
-  const description = document.getElementById("desc").value || "-";
+function handleTransfer(){
+  const toId=document.getElementById("toUser").value;
+  const amount=parseFloat(document.getElementById("amount").value);
+  const desc=document.getElementById("desc").value || "-";
 
-  if(amount <=0) return alert("Enter valid amount");
-  const receiver = users.find(u=>u.userId===toId);
-  if(!receiver) return alert("Receiver not found");
-  if(loggedInUser.balance < amount) return alert("Insufficient balance");
+  if(amount<=0){ alert("Enter valid amount"); return; }
+  const receiver=users.find(u=>u.userId===toId);
+  if(!receiver){ alert("Receiver not found"); return; }
+  if(loggedInUser.balance<amount){ alert("Insufficient balance"); return; }
 
   loggedInUser.balance -= amount;
   receiver.balance += amount;
 
-  const txnId = generateTxnId();
-  const dateTime = new Date().toLocaleString();
+  const txnId=generateTxnId();
+  const dateTime=new Date().toLocaleString();
 
-  transactions.push({
-    txnId, type:"Debit", fromName: loggedInUser.name, toName: receiver.name, amount, description, dateTime
-  });
-  transactions.push({
-    txnId, type:"Credit", fromName: loggedInUser.name, toName: receiver.name, amount, description, dateTime
-  });
+  transactions.push({txnId, type:"Debit", fromName:loggedInUser.name, toName:receiver.name, amount, description:desc, dateTime});
+  transactions.push({txnId, type:"Credit", fromName:loggedInUser.name, toName:receiver.name, amount, description:desc, dateTime});
 
   alert(`Transfer successful: ${amount} to ${receiver.name}`);
-
   document.getElementById("amount").value="";
   document.getElementById("desc").value="";
-
   populateUsers();
   updateBalance();
   updateTxnTable();
 }
 
-// Update Transaction Table
+// Transaction Table
 function updateTxnTable(){
-  const tbody = document.getElementById("txnHistory");
+  const tbody=document.getElementById("txnHistory");
   tbody.innerHTML="";
   transactions.forEach(txn=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${txn.txnId}</td>
-                    <td class="${txn.type.toLowerCase()}">${txn.type}</td>
-                    <td>${txn.fromName}</td>
-                    <td>${txn.toName}</td>
-                    <td>${txn.amount}</td>
-                    <td>${txn.description}</td>
-                    <td>${txn.dateTime}</td>`;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${txn.txnId}</td>
+                  <td class="${txn.type.toLowerCase()}">${txn.type}</td>
+                  <td>${txn.fromName}</td>
+                  <td>${txn.toName}</td>
+                  <td>${txn.amount}</td>
+                  <td>${txn.description}</td>
+                  <td>${txn.dateTime}</td>`;
     tbody.appendChild(tr);
   });
 }

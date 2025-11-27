@@ -3,49 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Halal Banking Wallet Demo</title>
+<title>Halal Banking Wallet System</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>Halal Banking Wallet Demo</h2>
+<h2>Halal Banking Wallet System (قرضِ حلال)</h2>
 
-<div>
-  <label>From:</label>
-  <select id="fromUser"></select>
+<div id="authSection">
+  <h3>Login / Sign Up</h3>
+
+  <div id="signupDiv">
+    <h4>Sign Up</h4>
+    <input type="text" id="signupName" placeholder="Full Name">
+    <input type="text" id="signupAadhar" placeholder="Aadhar Number">
+    <input type="text" id="signupPAN" placeholder="PAN Number">
+    <input type="email" id="signupEmail" placeholder="Email">
+    <input type="tel" id="signupMobile" placeholder="Mobile Number">
+    <input type="text" id="signupUserId" placeholder="User ID">
+    <input type="password" id="signupPassword" placeholder="Password">
+    <button onclick="handleSignUp()">Sign Up</button>
+  </div>
+
+  <div id="loginDiv">
+    <h4>Login</h4>
+    <input type="text" id="loginUserId" placeholder="User ID">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="handleLogin()">Login</button>
+  </div>
 </div>
-<div>
+
+<div id="walletSection" style="display:none;">
+  <h3>Welcome, <span id="profileName"></span></h3>
+  <button onclick="handleLogout()">Logout</button>
+
+  <h4>Profile Details</h4>
+  <ul id="profileDetails"></ul>
+
+  <h4>Wallet Transfer (قرضِ حلال)</h4>
   <label>To:</label>
-  <select id="toUser"></select>
-</div>
-<div>
+  <select id="toUser"></select><br>
   <label>Amount:</label>
-  <input type="number" id="amount">
-</div>
-<div>
+  <input type="number" id="amount"><br>
   <label>Description:</label>
-  <input type="text" id="desc" placeholder="Optional">
+  <input type="text" id="desc" placeholder="Optional"><br>
+  <button onclick="handleTransfer()">Transfer</button>
+
+  <h4>Wallet Balance</h4>
+  <p id="balance"></p>
+
+  <h4>Transaction History</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>Txn #</th>
+        <th>Type</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Amount</th>
+        <th>Description</th>
+        <th>Date & Time</th>
+      </tr>
+    </thead>
+    <tbody id="txnHistory"></tbody>
+  </table>
 </div>
-<button onclick="handleTransfer()">Transfer</button>
-
-<h3>Wallet Balances</h3>
-<ul id="balances"></ul>
-
-<h3>Transaction History</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Txn #</th>
-      <th>Type</th>
-      <th>From</th>
-      <th>To</th>
-      <th>Amount</th>
-      <th>Description</th>
-      <th>Date & Time</th>
-    </tr>
-  </thead>
-  <tbody id="txnHistory"></tbody>
-</table>
 
 <script src="script.js"></script>
 </body>

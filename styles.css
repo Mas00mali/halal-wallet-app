@@ -1,124 +1,32 @@
-/* -------------------------------
-   General Body Styles
----------------------------------*/
-body {
-    font-family: Arial, sans-serif;
-    background-color: #ffffff; /* White background */
-    margin: 0;
-    padding: 20px;
-    color: #006400; /* Default green text */
-}
+body { font-family: Arial; background:white; color:#006400; padding:20px; }
+#dashboardSection h3{ font-size:24px; color:#006400; }
+#dashboardSection p{ font-size:18px; color:#006400; margin-bottom:20px; }
 
-/* -------------------------------
-   Dashboard Header
----------------------------------*/
-#dashboardSection h3 {
-    margin: 0 0 5px 0;
-    font-size: 24px;
-    color: #006400; /* Dark green text */
-}
-
-#dashboardSection p {
-    font-size: 18px;
-    color: #006400; /* Dark green */
-    margin-bottom: 20px;
-}
-
-/* -------------------------------
-   Services Grid
----------------------------------*/
 .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
 }
 
-/* -------------------------------
-   Service Cards
----------------------------------*/
 .service-card {
-    background: #006400; /* Green background */
-    color: #ffffff;       /* White text */
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    cursor: pointer;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background:#006400; color:white; padding:20px; border-radius:15px;
+    text-align:center; cursor:pointer; box-shadow:0 8px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.service-card img {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 10px;
-    filter: brightness(0) invert(1); /* Make icons white */
-    transition: transform 0.3s ease;
-}
+.service-card img{ width:60px; height:60px; margin-bottom:10px; filter: brightness(0) invert(1); }
 
-/* -------------------------------
-   Hover Effect
----------------------------------*/
-.service-card:hover {
-    transform: translateY(-10px) scale(1.05) rotateY(10deg);
-    box-shadow: 0 15px 25px rgba(0,0,0,0.3);
-}
+.service-card:hover { transform:translateY(-10px) scale(1.05) rotateY(10deg); box-shadow:0 15px 25px rgba(0,0,0,0.3); }
 
-/* -------------------------------
-   Floating Animation (3D Effect)
----------------------------------*/
-.floating {
-    animation: float 4s ease-in-out infinite alternate;
-}
-
+.floating { animation: float 4s ease-in-out infinite alternate; }
 @keyframes float {
-    0% { transform: translateY(0px) rotateY(0deg) rotateX(0deg); }
-    25% { transform: translateY(-5px) rotateY(5deg) rotateX(2deg); }
-    50% { transform: translateY(-10px) rotateY(-5deg) rotateX(-2deg); }
-    75% { transform: translateY(-5px) rotateY(5deg) rotateX(2deg); }
-    100% { transform: translateY(0px) rotateY(0deg) rotateX(0deg); }
+    0%{transform:translateY(0px) rotateY(0deg);}
+    25%{transform:translateY(-5px) rotateY(5deg);}
+    50%{transform:translateY(-10px) rotateY(-5deg);}
+    75%{transform:translateY(-5px) rotateY(5deg);}
+    100%{transform:translateY(0px) rotateY(0deg);}
 }
 
-/* -------------------------------
-   Transaction Table Styles
----------------------------------*/
-.transaction-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.transaction-table th, .transaction-table td {
-    padding: 10px;
-    border: 1px solid #006400;
-    text-align: center;
-}
-
-.transaction-table th {
-    background-color: #006400; /* Green header */
-    color: #ffffff;             /* White text */
-}
-
-.transaction-table td.credit {
-    color: #006400; /* Green for credit */
-}
-
-.transaction-table td.debit {
-    color: #ff0000; /* Red for debit */
-}
-
-/* -------------------------------
-   Buttons Green & White
----------------------------------*/
-button {
-    background-color: #006400;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-button:hover {
-    background-color: #008000; /* Lighter green on hover */
-}
+.transaction-table { width:100%; border-collapse:collapse; margin-top:20px; }
+.transaction-table th, .transaction-table td { padding:10px; border:1px solid #006400; text-align:center; }
+.transaction-table th { background:#006400; color:white; }
+.transaction-table td.credit{ color:#006400; } 
+.transaction-table td.debit{ color:red; }

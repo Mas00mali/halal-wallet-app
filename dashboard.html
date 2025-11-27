@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halal Banking Wallet Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" style="display:none;">
+        <h3>Welcome, <span id="dashboardName"></span></h3>
+        <p>Wallet Balance: ₹<span id="dashboardBalance"></span></p>
+
+        <!-- Services Grid -->
+        <div class="services-grid">
+            <div class="service-card floating" onclick="serviceClick('Recharge')">
+                <img src="icons/recharge.png" alt="Recharge">
+                <p>Recharge</p>
+            </div>
+            <div class="service-card floating" onclick="serviceClick('Bill Payment')">
+                <img src="icons/bill.png" alt="Bill Payment">
+                <p>Bill Payment</p>
+            </div>
+            <div class="service-card floating" onclick="serviceClick('Money Transfer')">
+                <img src="icons/transfer.png" alt="Money Transfer">
+                <p>Money Transfer</p>
+            </div>
+            <div class="service-card floating" onclick="serviceClick('IRCTC/Flight/Train')">
+                <img src="icons/travel.png" alt="Travel Booking">
+                <p>Travel Booking</p>
+            </div>
+            <div class="service-card floating" onclick="serviceClick('Wallet to Bank')">
+                <img src="icons/wallet2bank.png" alt="Wallet to Bank">
+                <p>Wallet to Bank</p>
+            </div>
+            <div class="service-card floating" onclick="serviceClick('Add Money')">
+                <img src="icons/addmoney.png" alt="Add Money">
+                <p>Add Money</p>
+            </div>
+        </div>
+
+        <!-- Transaction Table Example -->
+        <table class="transaction-table">
+            <thead>
+                <tr>
+                    <th>Txn ID</th>
+                    <th>Date / Time</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>From / To</th>
+                </tr>
+            </thead>
+            <tbody id="transactionBody">
+                <!-- Transactions will be added dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

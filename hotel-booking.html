@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Booking</title>
+
+<style>
+    body {
+        font-family: Arial;
+        background: #ffffff;
+        color: #006400;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 26px;
+        color: #006400;
+        font-weight: bold;
+    }
+
+    .box {
+        width: 90%;
+        margin: auto;
+        background: #e6ffe6;
+        padding: 22px;
+        border-radius: 12px;
+        border: 2px solid #009900;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 12px;
+        color: #006400;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        margin-bottom: 18px;
+        border-radius: 10px;
+        border: 2px solid #009900;
+        color: #006400;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        background: #009900;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #007700;
+    }
+
+    #success {
+        margin-top: 25px;
+        padding: 15px;
+        background: #ccffcc;
+        border: 2px solid #00aa00;
+        border-radius: 10px;
+        display: none;
+        color: #006400;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+</style>
+
+</head>
+<body>
+
+<h2>🟢 Hotel Booking</h2>
+
+<div class="box">
+
+    <label>Hotel Name</label>
+    <input type="text" id="hotelName" placeholder="Enter hotel name">
+
+    <label>City</label>
+    <input type="text" id="city" placeholder="Enter city">
+
+    <label>Check-in Date</label>
+    <input type="date" id="checkin">
+
+    <label>Check-out Date</label>
+    <input type="date" id="checkout">
+
+    <label>Number of Guests</label>
+    <input type="number" id="guests" placeholder="Enter number of guests">
+
+    <label>Room Type</label>
+    <select id="roomType">
+        <option value="">Select Room Type</option>
+        <option>Single</option>
+        <option>Double</option>
+        <option>Deluxe</option>
+        <option>Suite</option>
+    </select>
+
+    <button onclick="bookHotel()">Book Hotel</button>
+
+</div>
+
+<div id="success">Hotel Booking Successful!</div>
+
+<script>
+function bookHotel() {
+    let hotelName = document.getElementById("hotelName").value;
+    let city = document.getElementById("city").value;
+    let checkin = document.getElementById("checkin").value;
+    let checkout = document.getElementById("checkout").value;
+    let guests = document.getElementById("guests").value;
+    let roomType = document.getElementById("roomType").value;
+
+    if(hotelName === "" || city === "" || checkin === "" || checkout === "" || guests === "" || roomType === "") {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    document.getElementById("success").style.display = "block";
+}
+</script>
+
+</body>
+</html>

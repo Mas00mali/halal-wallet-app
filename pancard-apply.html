@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAN Card Apply</title>
+
+<style>
+    body {
+        font-family: Arial;
+        background: #ffffff;
+        color: #006400;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 26px;
+        color: #006400;
+        font-weight: bold;
+    }
+
+    .box {
+        width: 90%;
+        margin: auto;
+        background: #e6ffe6;
+        padding: 22px;
+        border-radius: 12px;
+        border: 2px solid #009900;
+    }
+
+    label {
+        font-weight: bold;
+        color: #006400;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        margin-bottom: 18px;
+        border-radius: 10px;
+        border: 2px solid #009900;
+        color: #006400;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        background: #009900;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #007700;
+    }
+
+    #success {
+        margin-top: 25px;
+        padding: 15px;
+        background: #ccffcc;
+        border: 2px solid #00aa00;
+        border-radius: 10px;
+        display: none;
+        color: #006400;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+</style>
+
+</head>
+<body>
+
+<h2>🟢 PAN Card Apply Form</h2>
+
+<div class="box">
+
+    <label>Full Name</label>
+    <input type="text" id="name" placeholder="Enter full name">
+
+    <label>Father's Name</label>
+    <input type="text" id="father" placeholder="Enter father name">
+
+    <label>Date of Birth</label>
+    <input type="date" id="dob">
+
+    <label>Mobile Number</label>
+    <input type="text" id="mobile" placeholder="Enter mobile number">
+
+    <label>Email ID</label>
+    <input type="email" id="email" placeholder="Enter email">
+
+    <label>Aadhaar Number</label>
+    <input type="text" id="aadhar" placeholder="Enter Aadhaar number">
+
+    <label>Address</label>
+    <input type="text" id="address" placeholder="Enter full address">
+
+    <button onclick="submitForm()">Submit Application</button>
+
+</div>
+
+<div id="success">PAN Application Submitted Successfully!</div>
+
+<script>
+function submitForm() {
+    let name = document.getElementById("name").value;
+    let father = document.getElementById("father").value;
+    let dob = document.getElementById("dob").value;
+    let mobile = document.getElementById("mobile").value;
+    let email = document.getElementById("email").value;
+    let aadhar = document.getElementById("aadhar").value;
+    let address = document.getElementById("address").value;
+
+    if (name === "" || father === "" || dob === "" || mobile === "" || email === "" || aadhar === "" || address === "") {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    document.getElementById("success").style.display = "block";
+}
+</script>
+
+</body>
+</html>

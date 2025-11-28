@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Payment</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #ffffff;
+            color: #006400;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #006400;
+        }
+
+        .box {
+            width: 90%;
+            margin: auto;
+            background: #e6ffe6;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #009900;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #009900;
+            border-radius: 10px;
+            margin-top: 10px;
+            margin-bottom: 18px;
+            color: #006400;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #009900;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #007700;
+        }
+    </style>
+
+</head>
+<body>
+
+<h2>💡 Bill Payment</h2>
+
+<div class="box">
+
+    <label>Bill Type</label>
+    <select id="billType">
+        <option value="">Select Bill Type</option>
+        <option>Electricity</option>
+        <option>Water</option>
+        <option>Gas</option>
+        <option>Landline</option>
+        <option>Internet Broadband</option>
+        <option>DTH</option>
+    </select>
+
+    <label>Consumer Number</label>
+    <input type="text" id="consumer" placeholder="Enter consumer number">
+
+    <label>Amount</label>
+    <input type="number" id="amount" placeholder="Enter amount">
+
+    <button onclick="payBill()">Pay Bill</button>
+
+</div>
+
+<script>
+function payBill() {
+    let billType = document.getElementById("billType").value;
+    let consumer = document.getElementById("consumer").value;
+    let amount = document.getElementById("amount").value;
+
+    if (billType === "" || consumer === "" || amount === "") {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    alert("Bill Payment Successful!\n\n" +
+          "Bill Type: " + billType + "\n" +
+          "Consumer No: " + consumer + "\n" +
+          "Amount: ₹" + amount);
+}
+</script>
+
+</body>
+</html>

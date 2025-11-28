@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Booking</title>
+
+<style>
+    body {
+        font-family: Arial;
+        background: #ffffff;
+        color: #006400;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 26px;
+        color: #006400;
+        font-weight: bold;
+    }
+
+    .box {
+        width: 90%;
+        margin: auto;
+        background: #e6ffe6;
+        padding: 22px;
+        border-radius: 12px;
+        border: 2px solid #009900;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 12px;
+        color: #006400;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        margin-bottom: 18px;
+        border-radius: 10px;
+        border: 2px solid #009900;
+        color: #006400;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        background: #009900;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #007700;
+    }
+
+    #success {
+        margin-top: 25px;
+        padding: 15px;
+        background: #ccffcc;
+        border: 2px solid #00aa00;
+        border-radius: 10px;
+        display: none;
+        color: #006400;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+</style>
+
+</head>
+<body>
+
+<h2>🟢 Flight Booking</h2>
+
+<div class="box">
+
+    <label>From</label>
+    <input type="text" id="from" placeholder="Enter departure city">
+
+    <label>To</label>
+    <input type="text" id="to" placeholder="Enter destination city">
+
+    <label>Date of Journey</label>
+    <input type="date" id="date">
+
+    <label>Number of Passengers</label>
+    <input type="number" id="passengers" placeholder="Enter number of passengers">
+
+    <label>Class</label>
+    <select id="seatClass">
+        <option value="">Select Class</option>
+        <option>Economy</option>
+        <option>Business</option>
+        <option>First Class</option>
+    </select>
+
+    <button onclick="bookFlight()">Book Flight</button>
+
+</div>
+
+<div id="success">Flight Booking Successful!</div>
+
+<script>
+function bookFlight() {
+    let from = document.getElementById("from").value;
+    let to = document.getElementById("to").value;
+    let date = document.getElementById("date").value;
+    let passengers = document.getElementById("passengers").value;
+    let seatClass = document.getElementById("seatClass").value;
+
+    if(from === "" || to === "" || date === "" || passengers === "" || seatClass === "") {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    document.getElementById("success").style.display = "block";
+}
+</script>
+
+</body>
+</html>

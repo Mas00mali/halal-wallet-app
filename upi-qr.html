@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UPI QR Generate</title>
+
+<style>
+    body {
+        font-family: Arial;
+        background: #ffffff;
+        color: #006400;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 26px;
+        color: #006400;
+    }
+
+    .box {
+        width: 90%;
+        margin: auto;
+        background: #e6ffe6;
+        padding: 22px;
+        border-radius: 12px;
+        border: 2px solid #009900;
+    }
+
+    label {
+        font-weight: bold;
+        color: #006400;
+        font-size: 16px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 2px solid #009900;
+        margin-top: 10px;
+        margin-bottom: 18px;
+        color: #006400;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        background: #009900;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    button:hover {
+        background: #007700;
+    }
+
+    #qrBox {
+        margin-top: 25px;
+        text-align: center;
+        display: none;
+    }
+
+    img {
+        margin-top: 15px;
+    }
+
+</style>
+
+</head>
+<body>
+
+<h2>🟢 UPI QR Code Generate</h2>
+
+<div class="box">
+
+    <label>UPI ID</label>
+    <input type="text" id="upi" placeholder="example@upi">
+
+    <label>Name</label>
+    <input type="text" id="name" placeholder="Enter name">
+
+    <button onclick="generateQR()">Generate QR Code</button>
+
+</div>
+
+<div id="qrBox">
+    <h3 style="color:#006400;">Your UPI QR Code</h3>
+    <img id="qrImage" width="220">
+</div>
+
+<script>
+function generateQR() {
+    let upi = document.getElementById("upi").value;
+    let name = document.getElementById("name").value;
+
+    if (upi === "" || name === "") {
+        alert("Please enter UPI ID and Name.");
+        return;
+    }
+
+    // FREE QR API for demo
+    let qrURL = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=" + upi + "&pn=" + name;
+
+    document.getElementById("qrImage").src = qrURL;
+    document.getElementById("qrBox").style.display = "block";
+}
+</script>
+
+</body>
+</html>

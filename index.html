@@ -5,245 +5,107 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Halal Wallet Dashboard</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #ffffff;
-        color: #006400;
-        margin: 0;
-        padding: 0;
-    }
-    header {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        align-items: center;
-        background: #e6ffe6;
-        padding: 10px 20px;
-        border-bottom: 2px solid #009900;
-    }
-    header h1 {
-        font-size: 20px;
-        margin: 0;
-    }
-    .header-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        align-items: center;
-        margin-top: 5px;
-    }
-    .header-buttons button, .wallet-balance {
-        background: #009900;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        padding: 5px 10px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background 0.3s;
-        font-size: 14px;
-        text-align: center;
-    }
-    .wallet-balance {
-        background: #ffffff;
-        color: #006400;
-        border: 2px solid #009900;
-    }
-    .header-buttons button:hover {
-        background: #007700;
-    }
-
-    /* Modals */
-    .modal {
-        display: none;
-        position: fixed;
-        top:0; left:0; width:100%; height:100%;
-        background: rgba(0,0,0,0.5);
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
-    .modal-content {
-        background: #e6ffe6;
-        padding: 20px;
-        border-radius: 12px;
-        border: 2px solid #009900;
-        width: 90%;
-        max-width: 320px;
-        text-align: center;
-        position: relative;
-    }
-    .modal-content input {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 2px solid #009900;
-        border-radius: 8px;
-        font-size: 14px;
-    }
-    .modal-content button {
-        width: 100%;
-        padding: 12px;
-        background: #009900;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        margin-top: 5px;
-        font-size: 14px;
-    }
-    .modal-content button.close-btn {
-        position: absolute;
-        top: 5px;
-        right: 10px;
-        background: red;
-        width: 25px; height: 25px;
-        border-radius: 50%;
-        font-weight: bold;
-        padding: 0;
-        font-size: 16px;
-    }
-
-    /* Grid */
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-        gap: 10px;
-        padding: 15px;
-    }
-    .service-card {
-        background: #e6ffe6;
-        border: 2px solid #009900;
-        border-radius: 12px;
-        padding: 8px;
-        text-align: center;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .service-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-    }
-    .service-card img {
-        width: 32px;
-        height: 32px;
-        margin-bottom: 3px;
-    }
-    .service-card p {
-        color: #006400;
-        font-weight: bold;
-        font-size: 12px;
-        margin: 0;
-    }
-    @media (max-width: 500px) {
-        header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .header-buttons {
-            margin-top: 10px;
-        }
-    }
+body { font-family: Arial,sans-serif; margin:0; padding:0; background:#f5f5f5; }
+header { background:#009900; color:white; padding:15px; text-align:center; font-size:22px; font-weight:bold; }
+.top-buttons { display:flex; justify-content:space-around; padding:10px; background:#e6ffe6; }
+.top-buttons button { padding:10px 15px; border:none; border-radius:8px; background:#006400; color:white; cursor:pointer; font-weight:bold; }
+.top-buttons button:hover { background:#004d00; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:15px; padding:15px; }
+.service-card { background:#e6ffe6; border:2px solid #009900; border-radius:10px; text-align:center; padding:10px; cursor:pointer; transition:all 0.2s ease; }
+.service-card img { width:40px; height:40px; margin-bottom:5px; }
+.service-card:hover { transform:scale(1.05); }
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:10; }
+.modal-content { background:white; padding:20px; border-radius:12px; width:90%; max-width:400px; }
+.modal-content h3 { text-align:center; color:#006400; }
+.modal-content label { display:block; margin-top:10px; font-weight:bold; }
+.modal-content input { width:100%; padding:10px; margin-top:5px; border:1px solid #009900; border-radius:8px; }
+.modal-content button { margin-top:15px; width:100%; padding:12px; background:#009900; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
+.modal-content button:hover { background:#006400; }
+.success { background:#d4edda; padding:12px; margin-top:10px; border-left:4px solid #28a745; color:#225c2b; border-radius:6px; }
 </style>
 </head>
 <body>
 
-<header>
-    <h1>🟢 Halal Wallet</h1>
-    <div class="header-buttons">
-        <div class="wallet-balance">Balance: ₹10,000</div>
-        <button onclick="openAddMoneyModal()">Add Money</button>
-        <button onclick="location.href='profile.html'">Profile</button>
-        <button onclick="location.href='logout.html'">Log Out</button>
-    </div>
-</header>
+<header>Halal Wallet Dashboard</header>
 
-<!-- Add Money Modal -->
-<div id="addMoneyModal" class="modal">
-    <div class="modal-content">
-        <h3>Add Money</h3>
-        <input type="number" id="addAmount" placeholder="Enter amount">
-        <input type="text" id="addRemark" placeholder="Remark">
-        <button onclick="submitAddMoney()">Submit</button>
-        <button class="close-btn" onclick="closeAddMoneyModal()">X</button>
-    </div>
-</div>
-
-<!-- AEPS Modal -->
-<div id="aepsModal" class="modal">
-    <div class="modal-content">
-        <h3>AEPS Services</h3>
-        <button onclick="alert('Balance Enquiry clicked')">Balance Enquiry</button>
-        <button onclick="alert('Cash Withdrawal clicked')">Cash Withdrawal</button>
-        <button onclick="alert('Cash Deposit clicked')">Cash Deposit</button>
-        <button onclick="alert('Mini Statement clicked')">Mini Statement</button>
-        <button class="close-btn" onclick="closeAepsModal()">X</button>
-    </div>
+<div class="top-buttons">
+    <button onclick="openAddMoney()">Add Money</button>
+    <button onclick="openProfile()">Profile</button>
+    <button onclick="logout()">Logout</button>
 </div>
 
 <div class="grid">
-    <!-- New Wallet Services -->
-    <div class="service-card" onclick="alert('Wallet clicked')">
-        <img src="icons/wallet.png" alt="Wallet">
-        <p>Wallet</p>
-    </div>
-    <div class="service-card" onclick="alert('Wallet to Bank clicked')">
-        <img src="icons/wallet-to-bank.png" alt="Wallet to Bank">
-        <p>Wallet to Bank</p>
-    </div>
-    <div class="service-card" onclick="alert('Money Transfer clicked')">
-        <img src="icons/money-transfer.png" alt="Money Transfer">
-        <p>Money Transfer</p>
-    </div>
-    <div class="service-card" onclick="openAepsModal()">
-        <img src="icons/aeps.png" alt="AEPS">
-        <p>AEPS</p>
-    </div>
+    <div class="service-card" onclick="openSendMoney()"><img src="icons/send.png" alt="Send Money"><p>Send Money</p></div>
+    <div class="service-card" onclick="openAEPS()"><img src="icons/aeps.png" alt="AEPS"><p>AEPS</p></div>
+    <div class="service-card"><img src="icons/flight.png" alt="Flight Booking"><p>Flight Booking</p></div>
+    <div class="service-card"><img src="icons/hotel.png" alt="Hotel Booking"><p>Hotel Booking</p></div>
+    <div class="service-card"><img src="icons/train.png" alt="Train Booking"><p>Train Booking</p></div>
+    <div class="service-card"><img src="icons/lpg.png" alt="LPG Booking"><p>LPG Booking</p></div>
+    <div class="service-card"><img src="icons/recharge.png" alt="Recharge & Bill Payment"><p>Recharge & Bill Payment</p></div>
+    <div class="service-card"><img src="icons/irctc.png" alt="IRCTC"><p>IRCTC</p></div>
+</div>
 
-    <!-- Old Dashboard Services -->
-    <div class="service-card" onclick="alert('Flight Booking clicked')">
-        <img src="icons/flight.png" alt="Flight">
-        <p>Flight Booking</p>
+<!-- Modals -->
+<div class="modal" id="sendMoneyModal">
+    <div class="modal-content">
+        <h3>Send Money</h3>
+        <label>Receiver Mobile Number</label>
+        <input type="number" id="smobile" placeholder="Enter mobile number">
+        <label>Amount</label>
+        <input type="number" id="samount" placeholder="Enter amount">
+        <label>Remark</label>
+        <input type="text" id="sremark" placeholder="Enter remark">
+        <button onclick="sendMoney()">Send</button>
+        <div id="smResult"></div>
     </div>
-    <div class="service-card" onclick="alert('Hotel Booking clicked')">
-        <img src="icons/hotel.png" alt="Hotel">
-        <p>Hotel Booking</p>
+</div>
+
+<div class="modal" id="aepsModal">
+    <div class="modal-content">
+        <h3>AEPS Services</h3>
+        <button onclick="alert('Balance Enquiry done')">Balance Enquiry</button>
+        <button onclick="alert('Cash Withdrawal done')">Cash Withdrawal</button>
+        <button onclick="alert('Cash Deposit done')">Cash Deposit</button>
+        <button onclick="alert('Mini Statement done')">Mini Statement</button>
+        <button onclick="closeModal('aepsModal')">Close</button>
     </div>
-    <div class="service-card" onclick="alert('Train Booking clicked')">
-        <img src="icons/train.png" alt="Train">
-        <p>Train Booking</p>
-    </div>
-    <div class="service-card" onclick="alert('LPG Booking clicked')">
-        <img src="icons/lpg.png" alt="LPG">
-        <p>LPG Booking</p>
+</div>
+
+<div class="modal" id="addMoneyModal">
+    <div class="modal-content">
+        <h3>Add Money</h3>
+        <label>Amount</label>
+        <input type="number" id="addAmount" placeholder="Enter amount">
+        <label>Remark</label>
+        <input type="text" id="addRemark" placeholder="Remark">
+        <button onclick="addMoney()">Add Money</button>
+        <div id="addResult"></div>
     </div>
 </div>
 
 <script>
-function openAddMoneyModal() {
-    document.getElementById('addMoneyModal').style.display = 'flex';
-}
-function closeAddMoneyModal() {
-    document.getElementById('addMoneyModal').style.display = 'none';
-}
-function submitAddMoney() {
-    const amount = document.getElementById('addAmount').value;
-    const remark = document.getElementById('addRemark').value;
-    if(amount === "" || remark === ""){
-        alert("Please enter amount and remark.");
-        return;
-    }
-    const upiID = "paytmqr5m9yhr@ptys";
-    const upiLink = `upi://pay?pa=${upiID}&pn=HalalWallet&am=${amount}&tn=${remark}&cu=INR`;
-    window.location.href = upiLink;
+function openSendMoney(){ document.getElementById('sendMoneyModal').style.display='flex'; }
+function openAEPS(){ document.getElementById('aepsModal').style.display='flex'; }
+function openAddMoney(){ document.getElementById('addMoneyModal').style.display='flex'; }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+function openProfile(){ alert('Profile clicked'); }
+function logout(){ alert('Logout clicked'); }
+
+function sendMoney(){
+    let mobile = document.getElementById('smobile').value;
+    let amount = document.getElementById('samount').value;
+    let remark = document.getElementById('sremark').value;
+    if(mobile===''||amount===''){ alert('Enter mobile and amount'); return;}
+    document.getElementById('smResult').innerHTML=
+    `<div class='success'>₹${amount} sent successfully to ${mobile}<br>Remark: ${remark}</div>`;
 }
 
-function openAepsModal() {
-    document.getElementById('aepsModal').style.display = 'flex';
-}
-function closeAepsModal() {
-    document.getElementById('aepsModal').style.display = 'none';
+function addMoney(){
+    let amount = document.getElementById('addAmount').value;
+    let remark = document.getElementById('addRemark').value;
+    if(amount===''){ alert('Enter amount'); return;}
+    document.getElementById('addResult').innerHTML=
+    `<div class='success'>₹${amount} added successfully<br>Remark: ${remark}</div>`;
 }
 </script>
 

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Transfer</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #ffffff;
+            color: #006400;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #006400;
+        }
+
+        .box {
+            width: 90%;
+            margin: auto;
+            background: #e6ffe6;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #009900;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #009900;
+            border-radius: 10px;
+            margin-top: 10px;
+            margin-bottom: 18px;
+            color: #006400;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #009900;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #007700;
+        }
+    </style>
+
+</head>
+<body>
+
+<h2>💰 Money Transfer</h2>
+
+<div class="box">
+
+    <label>Transfer Type</label>
+    <select id="type">
+        <option value="">Select Type</option>
+        <option>NEFT</option>
+        <option>IMPS</option>
+        <option>RTGS</option>
+        <option>Wallet to Wallet</option>
+    </select>
+
+    <label>Sender Mobile</label>
+    <input type="text" id="sender" placeholder="Enter sender mobile">
+
+    <label>Receiver Bank Account</label>
+    <input type="text" id="account" placeholder="Enter account number">
+
+    <label>IFSC Code</label>
+    <input type="text" id="ifsc" placeholder="Enter IFSC code">
+
+    <label>Amount</label>
+    <input type="number" id="amount" placeholder="Enter amount">
+
+    <button onclick="sendMoney()">Send Money</button>
+
+</div>
+
+<script>
+function sendMoney

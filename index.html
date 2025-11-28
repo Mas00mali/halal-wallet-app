@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Halal Wallet Dashboard</title>
-
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -13,7 +12,6 @@
         margin: 0;
         padding: 0;
     }
-
     header {
         display: flex;
         flex-wrap: wrap;
@@ -23,12 +21,10 @@
         padding: 10px 20px;
         border-bottom: 2px solid #009900;
     }
-
     header h1 {
         font-size: 20px;
         margin: 0;
     }
-
     .header-buttons {
         display: flex;
         flex-wrap: wrap;
@@ -36,8 +32,7 @@
         align-items: center;
         margin-top: 5px;
     }
-
-    .header-buttons button {
+    .header-buttons button, .wallet-balance {
         background: #009900;
         color: white;
         border: none;
@@ -47,43 +42,38 @@
         cursor: pointer;
         transition: background 0.3s;
         font-size: 14px;
+        text-align: center;
     }
-
-    .header-buttons button:hover {
-        background: #007700;
-    }
-
     .wallet-balance {
         background: #ffffff;
         color: #006400;
         border: 2px solid #009900;
-        padding: 5px 10px;
-        border-radius: 6px;
-        font-weight: bold;
-        font-size: 14px;
+    }
+    .header-buttons button:hover {
+        background: #007700;
     }
 
-    /* Add Money Modal */
-    #addMoneyModal {
+    /* Modals */
+    .modal {
         display: none;
         position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
+        top:0; left:0; width:100%; height:100%;
         background: rgba(0,0,0,0.5);
         justify-content: center;
         align-items: center;
         z-index: 1000;
     }
-    #addMoneyModalContent {
-        background:#e6ffe6;
-        padding:20px;
-        border-radius:12px;
-        border:2px solid #009900;
+    .modal-content {
+        background: #e6ffe6;
+        padding: 20px;
+        border-radius: 12px;
+        border: 2px solid #009900;
         width: 90%;
         max-width: 320px;
-        text-align:center;
+        text-align: center;
         position: relative;
     }
-    #addMoneyModalContent input {
+    .modal-content input {
         width: 100%;
         padding: 10px;
         margin: 10px 0;
@@ -91,7 +81,7 @@
         border-radius: 8px;
         font-size: 14px;
     }
-    #addMoneyModalContent button {
+    .modal-content button {
         width: 100%;
         padding: 12px;
         background: #009900;
@@ -103,7 +93,7 @@
         margin-top: 5px;
         font-size: 14px;
     }
-    #addMoneyModalContent button.close-btn {
+    .modal-content button.close-btn {
         position: absolute;
         top: 5px;
         right: 10px;
@@ -115,14 +105,13 @@
         font-size: 16px;
     }
 
-    /* Services Grid */
+    /* Grid */
     .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
         gap: 10px;
         padding: 15px;
     }
-
     .service-card {
         background: #e6ffe6;
         border: 2px solid #009900;
@@ -132,25 +121,21 @@
         cursor: pointer;
         transition: transform 0.2s, box-shadow 0.2s;
     }
-
     .service-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     }
-
     .service-card img {
         width: 32px;
         height: 32px;
         margin-bottom: 3px;
     }
-
     .service-card p {
         color: #006400;
         font-weight: bold;
         font-size: 12px;
         margin: 0;
     }
-
     @media (max-width: 500px) {
         header {
             flex-direction: column;
@@ -175,8 +160,8 @@
 </header>
 
 <!-- Add Money Modal -->
-<div id="addMoneyModal">
-    <div id="addMoneyModalContent">
+<div id="addMoneyModal" class="modal">
+    <div class="modal-content">
         <h3>Add Money</h3>
         <input type="number" id="addAmount" placeholder="Enter amount">
         <input type="text" id="addRemark" placeholder="Remark">
@@ -185,47 +170,53 @@
     </div>
 </div>
 
+<!-- AEPS Modal -->
+<div id="aepsModal" class="modal">
+    <div class="modal-content">
+        <h3>AEPS Services</h3>
+        <button onclick="alert('Balance Enquiry clicked')">Balance Enquiry</button>
+        <button onclick="alert('Cash Withdrawal clicked')">Cash Withdrawal</button>
+        <button onclick="alert('Cash Deposit clicked')">Cash Deposit</button>
+        <button onclick="alert('Mini Statement clicked')">Mini Statement</button>
+        <button class="close-btn" onclick="closeAepsModal()">X</button>
+    </div>
+</div>
+
 <div class="grid">
-    <!-- Services -->
-    <div class="service-card" onclick="location.href='flight-booking.html'">
-        <img src="icons/flight.png" alt="Flight Booking">
-        <p>Flight</p>
-    </div>
-    <div class="service-card" onclick="location.href='hotel-booking.html'">
-        <img src="icons/hotel.png" alt="Hotel Booking">
-        <p>Hotel</p>
-    </div>
-    <div class="service-card" onclick="location.href='train-booking.html'">
-        <img src="icons/train.png" alt="Train Booking">
-        <p>Train</p>
-    </div>
-    <div class="service-card" onclick="location.href='lpg-booking.html'">
-        <img src="icons/lpg.png" alt="LPG Booking">
-        <p>LPG</p>
-    </div>
-    <div class="service-card" onclick="location.href='mobile-recharge.html'">
-        <img src="icons/mobile-recharge.png" alt="Mobile Recharge">
-        <p>Recharge</p>
-    </div>
-    <div class="service-card" onclick="location.href='bill-payment.html'">
-        <img src="icons/bill-payment.png" alt="Bill Payment">
-        <p>Bill</p>
-    </div>
-    <div class="service-card" onclick="location.href='wallet.html'">
-        <img src="icons/wallet.png" alt="Wallet Management">
+    <!-- New Wallet Services -->
+    <div class="service-card" onclick="alert('Wallet clicked')">
+        <img src="icons/wallet.png" alt="Wallet">
         <p>Wallet</p>
     </div>
-    <div class="service-card" onclick="location.href='upi.html'">
-        <img src="icons/upi.png" alt="UPI QR Payment">
-        <p>UPI QR</p>
+    <div class="service-card" onclick="alert('Wallet to Bank clicked')">
+        <img src="icons/wallet-to-bank.png" alt="Wallet to Bank">
+        <p>Wallet to Bank</p>
     </div>
-    <div class="service-card" onclick="location.href='pan-card.html'">
-        <img src="icons/pan-card.png" alt="PAN Card">
-        <p>PAN Card</p>
+    <div class="service-card" onclick="alert('Money Transfer clicked')">
+        <img src="icons/money-transfer.png" alt="Money Transfer">
+        <p>Money Transfer</p>
     </div>
-    <div class="service-card" onclick="location.href='insurance.html'">
-        <img src="icons/insurance.png" alt="Insurance">
-        <p>Insurance</p>
+    <div class="service-card" onclick="openAepsModal()">
+        <img src="icons/aeps.png" alt="AEPS">
+        <p>AEPS</p>
+    </div>
+
+    <!-- Old Dashboard Services -->
+    <div class="service-card" onclick="alert('Flight Booking clicked')">
+        <img src="icons/flight.png" alt="Flight">
+        <p>Flight Booking</p>
+    </div>
+    <div class="service-card" onclick="alert('Hotel Booking clicked')">
+        <img src="icons/hotel.png" alt="Hotel">
+        <p>Hotel Booking</p>
+    </div>
+    <div class="service-card" onclick="alert('Train Booking clicked')">
+        <img src="icons/train.png" alt="Train">
+        <p>Train Booking</p>
+    </div>
+    <div class="service-card" onclick="alert('LPG Booking clicked')">
+        <img src="icons/lpg.png" alt="LPG">
+        <p>LPG Booking</p>
     </div>
 </div>
 
@@ -233,11 +224,9 @@
 function openAddMoneyModal() {
     document.getElementById('addMoneyModal').style.display = 'flex';
 }
-
 function closeAddMoneyModal() {
     document.getElementById('addMoneyModal').style.display = 'none';
 }
-
 function submitAddMoney() {
     const amount = document.getElementById('addAmount').value;
     const remark = document.getElementById('addRemark').value;
@@ -245,12 +234,16 @@ function submitAddMoney() {
         alert("Please enter amount and remark.");
         return;
     }
-
-    // Your UPI ID provided
     const upiID = "paytmqr5m9yhr@ptys";
     const upiLink = `upi://pay?pa=${upiID}&pn=HalalWallet&am=${amount}&tn=${remark}&cu=INR`;
-
     window.location.href = upiLink;
+}
+
+function openAepsModal() {
+    document.getElementById('aepsModal').style.display = 'flex';
+}
+function closeAepsModal() {
+    document.getElementById('aepsModal').style.display = 'none';
 }
 </script>
 

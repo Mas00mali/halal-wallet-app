@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +9,9 @@ header { background:#009900; color:white; padding:15px; text-align:center; font-
 .top-buttons { display:flex; justify-content:space-around; padding:10px; background:#e6ffe6; }
 .top-buttons button { padding:10px 15px; border:none; border-radius:8px; background:#006400; color:white; cursor:pointer; font-weight:bold; }
 .top-buttons button:hover { background:#004d00; }
-.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:15px; padding:15px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(80px,1fr)); gap:12px; padding:15px; }
 .service-card { background:#e6ffe6; border:2px solid #009900; border-radius:10px; text-align:center; padding:10px; cursor:pointer; transition:all 0.2s ease; }
-.service-card img { width:40px; height:40px; margin-bottom:5px; }
+.service-card img { width:35px; height:35px; margin-bottom:5px; }
 .service-card:hover { transform:scale(1.05); }
 .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:10; }
 .modal-content { background:white; padding:20px; border-radius:12px; width:90%; max-width:400px; }
@@ -21,32 +20,24 @@ header { background:#009900; color:white; padding:15px; text-align:center; font-
 .modal-content input { width:100%; padding:10px; margin-top:5px; border:1px solid #009900; border-radius:8px; }
 .modal-content button { margin-top:15px; width:100%; padding:12px; background:#009900; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
 .modal-content button:hover { background:#006400; }
-.success { background:#d4edda; padding:12px; margin-top:10px; border-left:4px solid #28a745; color:#225c2b; border-radius:6px; }
+.success { background:#d4edda; padding:12px; margin-top:10px; border-left:4px solid #28a745; color:#225c2b; border-radius:6px; font-size:14px; }
+p { margin:0; font-size:14px; font-weight:bold; color:#006400; }
 </style>
 </head>
-<body>
-
-<header>Halal Wallet Dashboard</header>
-
-<div class="top-buttons">
+<body><header>Halal Wallet Dashboard</header><div class="top-buttons">
     <button onclick="openAddMoney()">Add Money</button>
     <button onclick="openProfile()">Profile</button>
     <button onclick="logout()">Logout</button>
-</div>
-
-<div class="grid">
+</div><div class="grid">
     <div class="service-card" onclick="openSendMoney()"><img src="icons/send.png" alt="Send Money"><p>Send Money</p></div>
     <div class="service-card" onclick="openAEPS()"><img src="icons/aeps.png" alt="AEPS"><p>AEPS</p></div>
-    <div class="service-card"><img src="icons/flight.png" alt="Flight Booking"><p>Flight Booking</p></div>
-    <div class="service-card"><img src="icons/hotel.png" alt="Hotel Booking"><p>Hotel Booking</p></div>
-    <div class="service-card"><img src="icons/train.png" alt="Train Booking"><p>Train Booking</p></div>
-    <div class="service-card"><img src="icons/lpg.png" alt="LPG Booking"><p>LPG Booking</p></div>
-    <div class="service-card"><img src="icons/recharge.png" alt="Recharge & Bill Payment"><p>Recharge & Bill Payment</p></div>
+    <div class="service-card"><img src="icons/flight.png" alt="Flight Booking"><p>Flight</p></div>
+    <div class="service-card"><img src="icons/hotel.png" alt="Hotel Booking"><p>Hotel</p></div>
+    <div class="service-card"><img src="icons/train.png" alt="Train Booking"><p>Train</p></div>
+    <div class="service-card"><img src="icons/lpg.png" alt="LPG Booking"><p>LPG</p></div>
+    <div class="service-card"><img src="icons/recharge.png" alt="Recharge & Bill Payment"><p>Recharge</p></div>
     <div class="service-card"><img src="icons/irctc.png" alt="IRCTC"><p>IRCTC</p></div>
-</div>
-
-<!-- Modals -->
-<div class="modal" id="sendMoneyModal">
+</div><!-- Modals --><div class="modal" id="sendMoneyModal">
     <div class="modal-content">
         <h3>Send Money</h3>
         <label>Receiver Mobile Number</label>
@@ -57,10 +48,9 @@ header { background:#009900; color:white; padding:15px; text-align:center; font-
         <input type="text" id="sremark" placeholder="Enter remark">
         <button onclick="sendMoney()">Send</button>
         <div id="smResult"></div>
+        <button onclick="closeModal('sendMoneyModal')">Close</button>
     </div>
-</div>
-
-<div class="modal" id="aepsModal">
+</div><div class="modal" id="aepsModal">
     <div class="modal-content">
         <h3>AEPS Services</h3>
         <button onclick="alert('Balance Enquiry done')">Balance Enquiry</button>
@@ -69,9 +59,7 @@ header { background:#009900; color:white; padding:15px; text-align:center; font-
         <button onclick="alert('Mini Statement done')">Mini Statement</button>
         <button onclick="closeModal('aepsModal')">Close</button>
     </div>
-</div>
-
-<div class="modal" id="addMoneyModal">
+</div><div class="modal" id="addMoneyModal">
     <div class="modal-content">
         <h3>Add Money</h3>
         <label>Amount</label>
@@ -80,10 +68,9 @@ header { background:#009900; color:white; padding:15px; text-align:center; font-
         <input type="text" id="addRemark" placeholder="Remark">
         <button onclick="addMoney()">Add Money</button>
         <div id="addResult"></div>
+        <button onclick="closeModal('addMoneyModal')">Close</button>
     </div>
-</div>
-
-<script>
+</div><script>
 function openSendMoney(){ document.getElementById('sendMoneyModal').style.display='flex'; }
 function openAEPS(){ document.getElementById('aepsModal').style.display='flex'; }
 function openAddMoney(){ document.getElementById('addMoneyModal').style.display='flex'; }
@@ -107,7 +94,5 @@ function addMoney(){
     document.getElementById('addResult').innerHTML=
     `<div class='success'>₹${amount} added successfully<br>Remark: ${remark}</div>`;
 }
-</script>
-
-</body>
+</script></body>
 </html>

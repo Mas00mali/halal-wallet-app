@@ -1,32 +1,86 @@
-body { font-family: Arial; background:white; color:#006400; padding:20px; }
-#dashboardSection h3{ font-size:24px; color:#006400; }
-#dashboardSection p{ font-size:18px; color:#006400; margin-bottom:20px; }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    color: #006400; /* Dark Green */
+}
 
+/* Dashboard Heading */
+h3 {
+    text-align: center;
+    color: #006400;
+    margin-top: 20px;
+}
+
+/* Wallet Balance */
+p {
+    text-align: center;
+    font-size: 18px;
+    color: #006400;
+}
+
+/* GRID SYSTEM */
 .services-grid {
-    display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 20px;
 }
 
+/* SERVICE CARD */
 .service-card {
-    background:#006400; color:white; padding:20px; border-radius:15px;
-    text-align:center; cursor:pointer; box-shadow:0 8px 15px rgba(0,0,0,0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
+    background: #e6ffe6;
+    border: 2px solid #009900;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    color: #006400;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s;
 }
 
-.service-card img{ width:60px; height:60px; margin-bottom:10px; filter: brightness(0) invert(1); }
+/* 3D Floating Animation */
+.floating {
+    animation: float 2s infinite ease-in-out;
+}
 
-.service-card:hover { transform:translateY(-10px) scale(1.05) rotateY(10deg); box-shadow:0 15px 25px rgba(0,0,0,0.3); }
-
-.floating { animation: float 4s ease-in-out infinite alternate; }
 @keyframes float {
-    0%{transform:translateY(0px) rotateY(0deg);}
-    25%{transform:translateY(-5px) rotateY(5deg);}
-    50%{transform:translateY(-10px) rotateY(-5deg);}
-    75%{transform:translateY(-5px) rotateY(5deg);}
-    100%{transform:translateY(0px) rotateY(0deg);}
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0px); }
 }
 
-.transaction-table { width:100%; border-collapse:collapse; margin-top:20px; }
-.transaction-table th, .transaction-table td { padding:10px; border:1px solid #006400; text-align:center; }
-.transaction-table th { background:#006400; color:white; }
-.transaction-table td.credit{ color:#006400; } 
-.transaction-table td.debit{ color:red; }
+.service-card:hover {
+    transform: scale(1.05);
+    background: #ccffcc;
+}
+
+/* TRANSACTION TABLE */
+.transaction-table {
+    width: 95%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+.transaction-table th,
+.transaction-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #009900;
+    color: #006400;
+    font-size: 14px;
+}
+
+/* CREDIT = GREEN */
+.credit {
+    color: green;
+    font-weight: bold;
+}
+
+/* DEBIT = RED */
+.debit {
+    color: red;
+    font-weight: bold;
+}

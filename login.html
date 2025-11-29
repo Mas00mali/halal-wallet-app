@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halal Wallet - Login</title>
+
+<style>
+body { font-family: Arial; background:#f2fff2; padding:20px; }
+.box {
+    max-width:350px; margin:auto; background:white; padding:20px;
+    border-radius:12px; border:2px solid #0b7a0b;
+}
+h2 { text-align:center; color:#0b7a0b; }
+input {
+    width:100%; padding:12px; margin-top:10px;
+    border:1px solid #0b7a0b; border-radius:8px;
+}
+button {
+    width:100%; padding:12px; margin-top:15px;
+    background:#0b7a0b; color:white; border:none; border-radius:8px; font-size:16px;
+}
+a { display:block; text-align:center; margin-top:10px; color:#0b7a0b; }
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Login</h2>
+
+    <input type="text" id="userid" placeholder="User ID">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+
+    <a href="forgot.html">Forgot Password?</a>
+    <a href="signup.html">Create New Account</a>
+
+    <p id="msg" style="color:red;text-align:center;margin-top:10px;"></p>
+</div>
+
+<script>
+function login(){
+    let id = document.getElementById("userid").value;
+    let pass = document.getElementById("password").value;
+
+    let savedID = localStorage.getItem("userid");
+    let savedPASS = localStorage.getItem("password");
+
+    if(id === savedID && pass === savedPASS){
+        window.location.href = "index.html";
+    } else {
+        document.getElementById("msg").innerHTML = "Invalid User ID or Password";
+    }
+}
+</script>
+
+</body>
+</html>

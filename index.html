@@ -1,439 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Halal Wallet - Final Dashboard</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Halal Wallet - Dashboard</title>
 <style>
-    :root{--green:#0b7a0b;--blue:#2b86d8;}
-    body{font-family:Arial, sans-serif; margin:0; background:#f4f7f6; color:#123;}
-    header{background:var(--green); color:#fff; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; position:relative;}
-    header h1{margin:0;font-size:18px}
-    .top-left{display:flex; gap:8px; align-items:center;}
-    .btn{background:var(--green); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:700;}
-    .btn.gray{background:#6c757d}
-    .btn.red{background:#d9534f}
-    .container{max-width:1100px; margin:14px auto; padding:12px;}
-    .wallet-panel{background:#fff;padding:12px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;}
-    .small{font-size:13px;color:#555}
-    .add-section{background:#fff;margin-top:12px;padding:12px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.06);}
-    input[type=number], input[type=text]{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:16px}
-    .pay-btn{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-weight:700;margin-top:8px;cursor:pointer}
-    #qrBox{display:none;margin-top:12px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:14px}
-    .card{background:#fff;padding:16px;border-radius:10px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.06);cursor:pointer}
-    .modal-back{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);justify-content:center;align-items:center;z-index:9999}
-    .modal{background:#fff;padding:16px;border-radius:10px;max-width:820px;width:96%}
-    table{width:100%;border-collapse:collapse;margin-top:8px}
-    th,td{padding:8px;border:1px solid #eee;text-align:left}
-    .status{padding:6px 8px;border-radius:8px;font-weight:700}
-    .pending{background:#fff8dc;color:#8a6d00}
-    .approved{background:#dff0d8;color:#3c763d}
-    .rejected{background:#f2dede;color:#a94442}
-    #timerBanner{display:none;background:#fff3cd;padding:10px;border-left:5px solid #ff9800;border-radius:8px;margin-top:12px}
-    .hidden{display:none}
-    @media(max-width:640px){ header h1{font-size:16px} }
+  body{font-family:Arial;margin:0;background:#f4f7f6}
+  header{background:#0b7a0b;color:#fff;padding:12px;display:flex;justify-content:space-between;align-items:center}
+  .btn{background:#0b7a0b;color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+  .container{max-width:1100px;margin:16px auto;padding:12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+  .card{background:#fff;padding:18px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.06);text-align:center}
+  .card p{margin:8px 0 0;font-weight:700;color:#0b7a0b}
+  .wallet{background:#fff;padding:12px;border-radius:10px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+  a.link{color:#0b7a0b;text-decoration:none;font-weight:700}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="top-left">
-    <button class="btn" id="adminOpenBtn">Admin</button>
-    <h1>Halal Wallet</h1>
+  <div style="display:flex;gap:12px;align-items:center">
+    <button class="btn" onclick="location.href='admin.html'">Admin</button>
+    <div style="font-weight:800">Halal Wallet Dashboard</div>
   </div>
-
-  <div style="display:flex; align-items:center; gap:10px;">
-    <div class="small" id="currentUserInfo">User: Guest</div>
-    <button class="btn gray" id="profileBtn">Profile</button>
-    <button class="btn red" id="logoutBtn">Logout</button>
+  <div style="display:flex;gap:8px;align-items:center">
+    <a class="link" href="hisab.html">Personal Hisab</a>
+    <button class="btn" onclick="location.href='addmoney.html'">Add Money</button>
   </div>
 </header>
 
 <div class="container">
-
-  <!-- Wallet -->
-  <div class="wallet-panel">
-    <div>
-      <div style="font-weight:800">Wallet Balance: <span id="walletDisplay">0 ₹</span></div>
-      <div class="small">Balance is per-user (stored in browser)</div>
-    </div>
-    <div style="display:flex; gap:8px; align-items:center;">
-      <button class="btn" id="openAddBtn">Add Money</button>
-      <a id="whatsappGroup" class="small" href="https://chat.whatsapp.com/HFQEeaC9U838OFgfGSKDD0?mode=hqrt1" target="_blank" style="text-decoration:none;color:#fff;background:#25D366;padding:8px 10px;border-radius:8px;font-weight:700">WhatsApp Group</a>
-    </div>
+  <div class="wallet">
+    <div><strong>Wallet Balance:</strong> <span id="balance">0 ₹</span></div>
+    <div><small id="currentUser">User: Guest</small></div>
   </div>
 
-  <!-- Add money area -->
-  <div class="add-section" id="addSection" style="display:none;">
-    <div style="display:flex;gap:12px;flex-wrap:wrap;">
-      <div style="flex:1;min-width:200px">
-        <label class="small">Enter Amount (₹)</label>
-        <input type="number" id="amountInput" placeholder="e.g. 250">
-      </div>
-      <div style="flex:1;min-width:200px">
-        <label class="small">Mobile (for notification)</label>
-        <input type="text" id="mobileInput" placeholder="Enter mobile number (with country code if needed)">
-      </div>
-    </div>
-
-    <div style="margin-top:8px">
-      <label class="small">Remark (optional)</label>
-      <input type="text" id="remarkInput" placeholder="Remark like Wallet Add / Recharge">
-    </div>
-
-    <button class="pay-btn" id="startPayBtn">Proceed & Open UPI App</button>
-
-    <!-- QR + Send Request -->
-    <div id="qrBox">
-      <div style="margin-top:12px; display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap;">
-        <div>
-          <div style="font-weight:800">Scan QR if UPI app didn't open</div>
-          <img id="qrImg" src="" alt="QR" style="width:220px;height:220px;border-radius:10px;border:1px solid #ddd;margin-top:8px">
-        </div>
-        <div style="flex:1;min-width:220px;">
-          <div class="small">Selected Amount: <b id="qrAmountLabel">-</b></div>
-          <div style="margin-top:8px">
-            <button class="btn" id="iPaidBtn">I HAVE PAID (Send Request to Admin)</button>
-          </div>
-          <div style="margin-top:8px">
-            <a id="notifyAdminWhatsApp" href="#" target="_blank" class="small" style="text-decoration:none;color:var(--green)">Notify Admin on WhatsApp</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="timerBanner">
-      <div style="font-weight:800">⏳ Confirmation window</div>
-      <div class="small">Please wait for admin approval. Time left: <span id="timerCounter">60</span> sec</div>
-      <div style="margin-top:8px">
-        <button class="btn gray" id="hideTimerBtn">Hide</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Services -->
-  <div class="grid" id="servicesGrid">
-    <div class="card"><div style="font-size:28px">📱</div><p>Mobile Recharge</p></div>
-    <div class="card"><div style="font-size:28px">📺</div><p>DTH Recharge</p></div>
-    <div class="card"><div style="font-size:28px">💡</div><p>Electricity Bill</p></div>
-    <div class="card"><div style="font-size:28px">💸</div><p>Send Money</p></div>
-    <div class="card"><div style="font-size:28px">🧾</div><p>AEPS</p></div>
-    <div class="card"><div style="font-size:28px">📘</div><p>Personal Hisab</p></div>
-    <div class="card"><div style="font-size:28px">📥</div><p>Mudarabah</p></div>
-    <div class="card"><div style="font-size:28px">🚓</div><p>Challan Deposit</p></div>
-    <div class="card"><div style="font-size:28px">📤</div><p>Accept UPI</p></div>
-  </div>
-
-</div>
-
-<!-- Admin Login Modal -->
-<div id="adminLoginModal" class="modal-back" style="display:none;align-items:center;">
-  <div class="modal">
-    <h3>Admin Login</h3>
-    <div style="display:flex;gap:8px;margin-top:8px;">
-      <input id="adminUser" placeholder="Admin username" style="flex:1;padding:10px;border-radius:8px;border:1px solid #ddd">
-      <input id="adminPass" type="password" placeholder="Admin password" style="flex:1;padding:10px;border-radius:8px;border:1px solid #ddd">
-    </div>
-    <div style="margin-top:10px;display:flex;gap:8px;">
-      <button class="btn" id="adminLoginBtn">Login</button>
-      <button class="btn gray" id="adminCancelBtn">Cancel</button>
-    </div>
-    <div id="adminLoginMsg" class="small" style="margin-top:8px;color:#a00"></div>
-  </div>
-</div>
-
-<!-- Admin Panel Modal (same page) -->
-<div id="adminPanelModal" class="modal-back" style="display:none;align-items:flex-start;overflow:auto;">
-  <div class="modal" style="max-width:1000px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <h3>Admin Panel - Payment Requests</h3>
-      <div>
-        <button class="btn" id="adminLogoutBtn">Logout Admin</button>
-        <button class="btn gray" id="adminCloseBtn">Close</button>
-      </div>
-    </div>
-
-    <div style="margin-top:12px;">
-      <table>
-        <thead><tr><th>Req ID</th><th>UserID</th><th>Mobile</th><th>Amount</th><th>Remark</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody id="requestsTbody"></tbody>
-      </table>
-    </div>
+  <div class="grid">
+    <div class="card"><div style="font-size:36px">📱</div><p><a class="link" href="recharge.html">Mobile Recharge</a></p></div>
+    <div class="card"><div style="font-size:36px">📺</div><p><a class="link" href="dth.html">DTH Recharge</a></p></div>
+    <div class="card"><div style="font-size:36px">💡</div><p><a class="link" href="electricity.html">Electricity Bill</a></p></div>
+    <div class="card"><div style="font-size:36px">💸</div><p><a class="link" href="sendmoney.html">Send Money (User → User)</a></p></div>
+    <div class="card"><div style="font-size:36px">🚗</div><p><a class="link" href="challan.html">Challan Deposit</a></p></div>
+    <div class="card"><div style="font-size:36px">📤</div><p>Accept UPI (Coming)</p></div>
   </div>
 </div>
 
 <script>
-/* ------------------ CONFIG ------------------ */
-const ADMIN_USER = "226492031189";
-const ADMIN_PASS = "Cavpa3961k";
-const UPI_ID = "paytmqr5m9yhr@ptys";               // provided by you
-const WHATSAPP_GROUP = "https://chat.whatsapp.com/HFQEeaC9U838OFgfGSKDD0?mode=hqrt1";
-
-/* ------------------ STATE & INIT ------------------ */
-// balances stored as object { userid: balance }
-if(!localStorage.getItem('balances')) localStorage.setItem('balances', JSON.stringify({}));
-if(!localStorage.getItem('paymentRequests')) localStorage.setItem('paymentRequests', JSON.stringify([]));
-
-let timerInterval = null;
-
-function initUI(){
-  // show current user info from localStorage if exists
-  let uid = localStorage.getItem('userid') || null;
-  let mobile = localStorage.getItem('mobile') || '';
-  document.getElementById('currentUserInfo').innerText = uid ? ('User: ' + uid) : 'User: Guest';
-  // show balance for current user
-  updateBalanceDisplay();
-  // event bindings
-  document.getElementById('openAddBtn').onclick = ()=> { document.getElementById('addSection').style.display='block'; };
-  document.getElementById('startPayBtn').onclick = startPayment;
-  document.getElementById('iPaidBtn').onclick = iHavePaid;
-  document.getElementById('notifyAdminWhatsApp').onclick = function(e){
-    // default go to group
-  };
-  document.getElementById('hideTimerBtn').onclick = ()=> { document.getElementById('timerBanner').style.display='none'; };
-  document.getElementById('adminOpenBtn').onclick = ()=> { openAdminLogin(); };
-  document.getElementById('adminCancelBtn').onclick = ()=> { closeAdminLogin(); };
-  document.getElementById('adminLoginBtn').onclick = adminLogin;
-  document.getElementById('adminCloseBtn').onclick = ()=> closeAdminPanel();
-  document.getElementById('adminLogoutBtn').onclick = adminLogout;
-  document.getElementById('logoutBtn').onclick = ()=> { alert('Logged out'); location.href='login.html'; };
-  document.getElementById('profileBtn').onclick = ()=> alert('Profile coming soon');
-  // restore timer if any
-  resumeTimerIfAny();
-  renderRequests();
-}
-initUI();
-
-/* ------------------ Helpers ------------------ */
-function updateBalanceDisplay(){
-  const uid = localStorage.getItem('userid') || 'Guest';
-  const balances = JSON.parse(localStorage.getItem('balances') || '{}');
-  const bal = balances[uid] || 0;
-  document.getElementById('walletDisplay').innerText = bal + ' ₹';
-}
-
-/* ------------------ Payment flow ------------------ */
-function startPayment(){
-  // validate
-  const amount = Number(document.getElementById('amountInput').value || 0);
-  const mobile = document.getElementById('mobileInput').value.trim();
-  const remark = document.getElementById('remarkInput').value.trim() || 'Add Money';
-
-  if(!amount || amount <= 0){ alert('Enter valid amount'); return; }
-  if(!mobile){ if(!confirm('Mobile not entered. Continue without mobile?')) return; }
-
-  // Prevent new requests if existing pending for this user
-  const uid = localStorage.getItem('userid') || prompt('Enter your UserID (will be stored locally):','Guest');
-  if(!localStorage.getItem('userid')) localStorage.setItem('userid', uid);
-  if(mobile) localStorage.setItem('mobile', mobile);
-
-  const requests = JSON.parse(localStorage.getItem('paymentRequests') || '[]');
-  const alreadyPending = requests.find(r=> r.userId === uid && r.status === 'pending');
-  if(alreadyPending){ alert('Aapki pichli request abhi pending hai. Admin approval ka wait karein.'); return; }
-
-  // prepare UPI link + QR
-  const upiLink = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent('Halal Wallet')}&tn=${encodeURIComponent(remark)}&am=${encodeURIComponent(amount)}&cu=INR`;
-  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(upiLink);
-  document.getElementById('qrImg').src = qrUrl;
-  document.getElementById('qrAmountLabel').innerText = '₹' + amount;
-  document.getElementById('qrBox').style.display = 'block';
-
-  // store current pending request in localStorage
-  const req = {
-    id: 'REQ' + Date.now(),
-    userId: uid,
-    mobile: mobile,
-    amount: amount,
-    remark: remark,
-    time: new Date().toLocaleString(),
-    status: 'pending'
-  };
-  requests.push(req);
-  localStorage.setItem('paymentRequests', JSON.stringify(requests));
-
-  // set lock for this user (prevents new request)
-  localStorage.setItem('paymentLock_'+uid, 'true');
-
-  // timestamp end (60 sec)
-  const end = Date.now() + 60*1000;
-  localStorage.setItem('paymentTimerEnd_'+req.id, String(end));
-  // store mapping lastRequestForUser
-  localStorage.setItem('lastRequestId_'+uid, req.id);
-
-  // show timer banner & set counter
-  showTimerForRequest(req.id);
-
-  // set WhatsApp notify link for admin (optional)
-  const waText = encodeURIComponent(`New Add Money request\nUser: ${uid}\nMobile: ${mobile}\nAmount: ₹${amount}\nReqID: ${req.id}`);
-  document.getElementById('notifyAdminWhatsApp').href = `https://wa.me/?text=${waText}`;
-
-  // try to open UPI app
-  setTimeout(()=> { window.location.href = upiLink; }, 200);
-  alert('UPI app try open ki ja rahi hai — agar app open na ho to QR scan karein. Request admin ko bhej diya gaya.');
-  renderRequests();
-}
-
-function iHavePaid(){
-  // User says they have paid — but we already created request at startPayment.
-  const uid = localStorage.getItem('userid') || 'Guest';
-  const reqId = localStorage.getItem('lastRequestId_'+uid);
-  if(!reqId){ alert('No recent request found. Start payment first.'); return; }
-  alert('Payment confirmation note sent to admin panel. Admin will verify and approve/reject.');
-  // (We already stored request)
-  renderRequests();
-}
-
-/* ------------------ Timer handling ------------------ */
-function showTimerForRequest(reqId){
-  // clear existing
-  clearInterval(timerInterval);
-  document.getElementById('timerBanner').style.display = 'block';
-  // compute end
-  const end = Number(localStorage.getItem('paymentTimerEnd_'+reqId));
-  if(!end) return;
-  function tick(){
-    const remaining = end - Date.now();
-    if(remaining <= 0){
-      clearInterval(timerInterval);
-      document.getElementById('timerCounter').innerText = '0';
-      document.getElementById('timerBanner').style.display = 'none';
-      // unlock user
-      unlockUserByRequest(reqId);
-      return;
-    }
-    document.getElementById('timerCounter').innerText = Math.ceil(remaining/1000);
-  }
-  tick();
-  timerInterval = setInterval(tick, 1000);
-}
-function resumeTimerIfAny(){
-  // find any pending request for current user and resume
-  const uid = localStorage.getItem('userid') || null;
-  if(!uid) return;
-  const reqId = localStorage.getItem('lastRequestId_'+uid);
-  if(!reqId) return;
-  const end = Number(localStorage.getItem('paymentTimerEnd_'+reqId) || 0);
-  if(end && end > Date.now()){
-    showTimerForRequest(reqId);
-  } else {
-    // cleanup if expired
-    localStorage.removeItem('paymentTimerEnd_'+reqId);
-    localStorage.removeItem('lastRequestId_'+uid);
-    localStorage.removeItem('paymentLock_'+uid);
-  }
-}
-function unlockUserByRequest(reqId){
-  // find request
-  const requests = JSON.parse(localStorage.getItem('paymentRequests')||'[]');
-  const req = requests.find(r=> r.id === reqId);
-  if(req){
-    // only unlock the user who made that request
-    localStorage.removeItem('paymentLock_'+req.userId);
-    localStorage.removeItem('lastRequestId_'+req.userId);
-    localStorage.removeItem('paymentTimerEnd_'+reqId);
-    // mark req as timed-out if still pending
-    if(req.status === 'pending'){
-      req.status = 'timedout';
-      localStorage.setItem('paymentRequests', JSON.stringify(requests));
-      renderRequests();
-    }
-  }
-}
-
-/* ------------------ Admin login & panel ------------------ */
-function openAdminLogin(){
-  document.getElementById('adminLoginModal').style.display = 'flex';
-  document.getElementById('adminLoginMsg').innerText = '';
-}
-function closeAdminLogin(){ document.getElementById('adminLoginModal').style.display = 'none'; }
-function adminLogin(){
-  const u = document.getElementById('adminUser').value.trim();
-  const p = document.getElementById('adminPass').value;
-  if(u === ADMIN_USER && p === ADMIN_PASS){
-    sessionStorage.setItem('isAdmin','true');
-    closeAdminLogin();
-    openAdminPanel();
-  } else {
-    document.getElementById('adminLoginMsg').innerText = 'Invalid credentials';
-  }
-}
-function openAdminPanel(){
-  if(sessionStorage.getItem('isAdmin') !== 'true'){ openAdminLogin(); return; }
-  document.getElementById('adminPanelModal').style.display = 'flex';
-  renderRequests();
-}
-function closeAdminPanel(){ document.getElementById('adminPanelModal').style.display = 'none'; }
-function adminLogout(){ sessionStorage.removeItem('isAdmin'); closeAdminPanel(); alert('Admin logged out'); }
-
-/* ------------------ Render requests in admin panel ------------------ */
-function renderRequests(){
-  const tbody = document.getElementById('requestsTbody');
-  const requests = JSON.parse(localStorage.getItem('paymentRequests')||'[]').slice().reverse();
-  if(!tbody) return;
-  tbody.innerHTML = '';
-  if(requests.length === 0){
-    tbody.innerHTML = '<tr><td colspan="8" class="small">No requests</td></tr>';
-    return;
-  }
-  requests.forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${r.id}</td>
-                    <td>${r.userId||'Guest'}</td>
-                    <td>${r.mobile||'-'}</td>
-                    <td>₹${r.amount}</td>
-                    <td>${r.remark}</td>
-                    <td>${r.time}</td>
-                    <td><span class="status ${r.status==='pending'?'pending':(r.status==='approved'?'approved':'rejected')}">${r.status.toUpperCase()}</span></td>
-                    <td></td>`;
-    const actionTd = tr.querySelector('td:last-child');
-    if(r.status === 'pending'){
-      const a = document.createElement('button'); a.className='btn'; a.style.marginRight='6px'; a.innerText='Approve';
-      a.onclick = ()=> approveRequest(r.id);
-      const b = document.createElement('button'); b.className='btn gray'; b.innerText='Reject';
-      b.onclick = ()=> rejectRequest(r.id);
-      actionTd.appendChild(a); actionTd.appendChild(b);
-      // add quick whatsapp notify to user button
-      const w = document.createElement('button'); w.className='btn'; w.style.background='#25D366'; w.style.marginLeft='6px'; w.innerText='WA->User';
-      w.onclick = ()=> openWhatsAppToUser(r.mobile, `Your request ${r.id} for ₹${r.amount} is pending admin verification.`);
-      actionTd.appendChild(w);
-    } else {
-      actionTd.innerHTML = '<span class="small">No actions</span>';
-    }
-    tbody.appendChild(tr);
-  });
-}
-
-/* ------------------ Approve / Reject ------------------ */
-function approveRequest(reqId){
-  let requests = JSON.parse(localStorage.getItem('paymentRequests')||'[]');
-  const idx = requests.findIndex(x=>x.id===reqId);
-  if(idx === -1){ alert('Request not found'); return; }
-  const req = requests[idx];
-  if(req.status !== 'pending'){ alert('Already processed'); return; }
-
-  // update status
-  requests[idx].status = 'approved';
-  requests[idx].processedAt = new Date().toLocaleString();
-  localStorage.setItem('paymentRequests', JSON.stringify(requests));
-
-  // stop timer & unlock user
-  localStorage.removeItem('paymentTimerEnd_'+reqId);
-  clearInterval(timerInterval);
-  localStorage.removeItem('paymentLock_'+req.userId);
-  localStorage.removeItem('lastRequestId_'+req.userId);
-
-  // credit balance per-user
+  // initialize demo balances & user
+  if(!localStorage.getItem('balances')) localStorage.setItem('balances', JSON.stringify({}));
+  // set demo user if not present
+  if(!localStorage.getItem('userid')) localStorage.setItem('userid', 'user001');
+  const uid = localStorage.getItem('userid');
+  document.getElementById('currentUser').innerText = 'User: ' + uid;
+  // show balance
   const balances = JSON.parse(localStorage.getItem('balances')||'{}');
-  balances[req.userId] = (Number(balances[req.userId]||0) + Number(req.amount||0));
-  localStorage.setItem('balances', JSON.stringify(balances));
-  // update UI for current user if same
-  updateBalanceDisplay();
-
-  renderRequests();
-  alert('Request APPROVED. Wallet updated.');
-
-  // Ask admin to notify user via WhatsApp (open wa.me with prefilled msg)
-  if(req.mobile){
-    if(confirm('Send WhatsApp notification to user now? (will open WhatsApp Web)')){
-      openWhatsAppToUser
+  document.getElementById('balance').innerText = (balances[uid]||0) + ' ₹';
+</script>
+</body>
+</html>

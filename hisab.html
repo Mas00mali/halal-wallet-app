@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Personal Hisab</title>
+<style>body{font-family:Arial;margin:0;background:#f4f6f6}header{background:#0b7a0b;color:#fff;padding:12px} .container{max-width:900px;margin:12px auto;padding:12px} input,select{padding:8px;border-radius:6px;border:1px solid #ddd;width:100%;margin-top:6px} .btn{padding:8px;background:#0b7a0b;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-top:8px} .entry{background:#fff;padding:10px;border-radius:8px;margin-top:8px;border-left:4px solid #0b7a0b}</style>
+</head>
+<body>
+<header><strong>Personal Hisab (Digital Bahi Khata)</strong></header>
+<div class="container">
+  <label>Contact Name / Username</label><input id="name">
+  <label>Mobile</label><input id="mobile">
+  <label>Type</label><select id="type"><option value="credit">Credit (You Got)</option><option value="debit">Debit (You Gave)</option></select>
+  <label>Amount</label><input id="amount" type="number">
+  <label>Note</label><input id="note">
+  <button class="btn" onclick="addEntry()">Add Entry</button>
+
+  <h3 style="margin-top:12px">Entries</h3>
+  <div id="list"></div>
+  <div style="margin-top:12px"><a href="index.html">← Dashboard</a></div>
+</div>
+
+<script>
+ function addEntry(){
+   const name=document.getElementById('name').value.trim(), mobile=document.getElementById('mobile').value.trim();
+   const type=document.getElementById('type').value, amt=Number(document.getElementById('amount').value||0), note=document.getElementById('note').value;
+   if(!name){ alert('Enter name'); return;} if(!amt||amt<=0){ alert('Enter amount'); return; }
+   const entries=JSON.parse(localStorage.getItem('hisab')||'[]');
+   const e={id:'H'+Date.now(), name, mobile, type, amt, note, time:new Date().toLocaleString()};
+   entries.unshift(e);
+   localStorage.setItem('hisab', JSON.stringify(entries));
+   render();
+ }
+ function render(){
+   const list=document.getElementById('list'); list.innerHTML='';
+   const entries=JSON.parse(localStorage.getItem('hisab')||'[]');
+   if(entries.length===0){ list.innerHTML='<div class="small">No entries</div>'; return; }
+   entries.forEach(en=>{
+     const d=document.createElement('div'); d.className='entry';
+     d.innerHTML=`<strong>${en.name}</strong> (${en.mobile||''})<br><b>${en.type.toUpperCase()}</b> ₹${en.amt}<div class="small">${en.note||''} • ${en.time}</div>`;
+     list.appendChild(d);
+   });
+ }
+ render();
+</script>
+</body>
+</html>

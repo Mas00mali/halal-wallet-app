@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Electricity Bill</title>
+<style>body{font-family:Arial;margin:0;background:#f4f7f6}header{background:#0b7a0b;color:#fff;padding:12px} .container{max-width:800px;margin:12px auto;padding:12px} select,input{padding:10px;width:100%;border-radius:6px;border:1px solid #ddd;margin-top:8px} .btn{padding:10px;background:#0b7a0b;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-top:8px}</style>
+</head>
+<body>
+<header><strong>Electricity Bill Payment</strong></header>
+<div class="container">
+  <label>State / Operator</label>
+  <select id="op">
+    <option value="UPPCL">UPPCL (Uttar Pradesh)</option>
+    <option value="MSEB">MSEB</option>
+    <option value="BSES">BSES</option>
+  </select>
+  <label>Consumer No.</label><input id="cons" placeholder="Enter consumer no">
+  <label>Amount (₹)</label><input id="amt" type="number">
+  <button class="btn" onclick="payBill()">Pay Bill</button>
+  <div style="margin-top:12px"><a href="index.html">← Dashboard</a></div>
+</div>
+<script>
+ function payBill(){ const op=document.getElementById('op').value; const cons=document.getElementById('cons').value.trim(); const amt=Number(document.getElementById('amt').value||0);
+ if(!cons){ alert('Enter consumer number'); return; } if(!amt||amt<=0){ alert('Enter amount'); return; }
+ alert('Bill payment simulated for '+op+' ₹'+amt);
+ location.href='index.html';
+ }
+</script>
+</body>
+</html>

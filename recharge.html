@@ -1,99 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile Recharge</title>
-    <style>
-        body {
-            background: white;
-            color: #006400;
-            font-family: Arial;
-            padding: 20px;
-        }
-        h2 {
-            text-align: center;
-            color: #006400;
-            margin-bottom: 20px;
-        }
-        .box {
-            width: 90%;
-            margin: auto;
-            border: 2px solid #009900;
-            border-radius: 10px;
-            padding: 20px;
-            background: #e6ffe6;
-        }
-        label {
-            font-weight: bold;
-            color: #006400;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #009900;
-            border-radius: 8px;
-            margin-top: 8px;
-            margin-bottom: 15px;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #009900;
-            color: white;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:hover {
-            background: #007700;
-        }
-    </style>
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Mobile Recharge</title>
+<style>body{font-family:Arial;margin:0;background:#f6f7f7}header{background:#0b7a0b;color:#fff;padding:12px} .container{max-width:800px;margin:12px auto;padding:12px} select,input{padding:10px;width:100%;margin-top:8px;border-radius:6px;border:1px solid #ddd} .btn{padding:10px;background:#0b7a0b;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-top:10px}</style>
 </head>
 <body>
-
-<h2>📱 Mobile Recharge</h2>
-
-<div class="box">
-
-    <label>Mobile Number</label>
-    <input type="number" id="mobile" placeholder="Enter mobile number">
-
-    <label>Operator</label>
-    <select id="operator">
-        <option value="">Select Operator</option>
-        <option>Jio</option>
-        <option>Airtel</option>
-        <option>VI</option>
-        <option>BSNL</option>
-    </select>
-
-    <label>Amount</label>
-    <input type="number" id="amount" placeholder="Enter amount">
-    
-    <button onclick="doRecharge()">Recharge Now</button>
-
+<header><strong>Mobile Recharge</strong></header>
+<div class="container">
+  <label>Operator</label>
+  <select id="operator">
+    <option value="Airtel">Airtel</option>
+    <option value="Jio">Jio</option>
+    <option value="Vodafone">Vodafone</option>
+    <option value="BSNL">BSNL</option>
+  </select>
+  <label>Mobile Number</label>
+  <input id="mobile" placeholder="Enter 10-digit mobile">
+  <label>Amount (₹)</label>
+  <input id="amount" type="number" placeholder="Amount">
+  <button class="btn" onclick="doRecharge()">Recharge</button>
+  <div style="margin-top:12px"><a href="index.html">← Dashboard</a></div>
 </div>
 
 <script>
-function doRecharge() {
-    let mobile = document.getElementById("mobile").value;
-    let operator = document.getElementById("operator").value;
-    let amount = document.getElementById("amount").value;
-
-    if (mobile === "" || operator === "" || amount === "") {
-        alert("Please fill all fields.");
-        return;
-    }
-
-    alert("Recharge Successful!\n\n" +
-          "Mobile: " + mobile + "\n" +
-          "Operator: " + operator + "\n" +
-          "Amount: ₹" + amount);
-}
+ function doRecharge(){
+   const op=document.getElementById('operator').value;
+   const mob=document.getElementById('mobile').value.trim();
+   const amt=Number(document.getElementById('amount').value||0);
+   if(!/^\d{10}$/.test(mob)){ alert('Enter valid 10-digit mobile'); return; }
+   if(!amt || amt<=0){ alert('Enter amount'); return; }
+   // demo: deduct from wallet if available
+   const uid = localStorage.getItem('userid') || 'user001';
+   const balances = JSON.parse(localStorage.getItem('balances')||'{}');
+   const bal = Number(balances[uid]||0);
+   if(bal < amt){ if(!confirm('Insufficient wallet balance. Proceed without wallet?')) return; }
+   else { balances[uid]=bal-amt; localStorage.setItem('balances',JSON.stringify(balances)); alert('Recharge done via wallet. ₹'+amt+' deducted.'); location.href='index.html'; return; }
+   alert('Recharge simulated (no wallet deduction).');
+   location.href='index.html';
+ }
 </script>
-
 </body>
 </html>

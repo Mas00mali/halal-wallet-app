@@ -1,270 +1,448 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Service Dashboard</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Halal Wallet - Dashboard (With Admin Requests)</title>
+<style>
+    body { font-family: Arial, sans-serif; margin:0; background:#f5f7fb; color:#163b2b; }
+    header {
+        background:#0b7a0b; color:white; padding:14px 16px; position:relative;
+        display:flex; align-items:center; justify-content:space-between;
+    }
+    header h1 { margin:0; font-size:18px; }
+    .top-actions { display:flex; gap:8px; align-items:center; }
+    .btn { background:#0b7a0b; color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:600; }
+    .btn.red { background:#d9534f; }
+    .btn.gray { background:#6c757d; }
+    .container { padding:15px; max-width:1100px; margin:12px auto; }
+    .wallet-panel { background:white; padding:12px 16px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.08); display:flex; justify-content:space-between; align-items:center; }
+    .wallet-left { font-size:16px; font-weight:700; color:#0b7a0b; }
+    .wallet-right .btn { margin-left:8px; }
+    .add-money-box { margin-top:14px; background:white; padding:12px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.06); }
+    .quick-btns { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+    .add-btn { background:#2b86d8; color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:700; }
+    .add-btn:hover{ opacity:0.95; }
+    .qr-area { margin-top:14px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .qr-area img { width:220px; height:220px; border-radius:8px; border:1px solid #e0e0e0; background:white; }
+    .qr-area .actions { display:flex; flex-direction:column; gap:8px; }
+    .hint { font-size:13px; color:#555; margin-top:8px; }
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
+    /* services grid */
+    .grid { margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; }
+    .card { background:white; padding:18px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.06); text-align:center; cursor:pointer; }
+    .card .emoji { font-size:30px; margin-bottom:8px; display:block; }
+    .card p { margin:0; font-weight:600; color:#0b7a0b; }
 
-        header {
-            background: #4A90E2;
-            color: white;
-            padding: 18px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-            position: relative;
-        }
+    /* Admin modal & login modal */
+    .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); justify-content:center; align-items:center; z-index:9999; }
+    .modal { background:white; width:96%; max-width:740px; border-radius:10px; padding:14px; box-shadow:0 6px 20px rgba(0,0,0,0.25); }
+    .modal .title { font-weight:700; color:#0b7a0b; margin-bottom:10px; }
+    .form-row { display:flex; gap:8px; margin-top:8px; }
+    .form-row input, .form-row select, textarea { padding:10px; border:1px solid #ddd; border-radius:8px; flex:1; }
 
-        .logout-btn {
-            position: absolute;
-            right: 15px;
-            top: 12px;
-            padding: 8px 14px;
-            background: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+    /* requests table */
+    table { width:100%; border-collapse:collapse; margin-top:8px; }
+    th, td { padding:10px 8px; border:1px solid #eee; text-align:left; font-size:14px; }
+    th { background:#f7f7f7; font-weight:700; color:#0b7a0b; }
+    .status { padding:6px 8px; border-radius:8px; display:inline-block; font-weight:700; }
+    .pending { background:#fff8dc; color:#8a6d00; }
+    .approved { background:#dff0d8; color:#3c763d; }
+    .rejected { background:#f2dede; color:#a94442; }
 
-        /* Wallet Bar */
-        .wallet-bar {
-            background: white;
-            padding: 15px;
-            margin: 10px;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            font-size: 18px;
-        }
+    .small { font-size:13px; color:#555; }
 
-        .container {
-            padding: 15px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 15px;
-        }
-
-        .box {
-            background: white;
-            border-radius: 12px;
-            padding: 20px 10px;
-            text-align: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .box:hover { transform: scale(1.05); }
-
-        .icon {
-            font-size: 35px;
-            margin-bottom: 8px;
-            color: #4A90E2;
-        }
-
-        /* AEPS Sub Menu */
-        .aeps-box {
-            display: none;
-            margin-top: 15px;
-        }
-
-        .sub-box {
-            background: #ffffff;
-            padding: 15px;
-            margin-top: 10px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-        }
-
-        /* Personal Hisab Modal */
-        #hisabBox {
-            display: none;
-            background: white;
-            padding: 15px;
-            margin: 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        }
-
-        .hisab-entry {
-            background: #e7f0ff;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        /* Add money buttons */
-        .add-btn {
-            padding: 10px 15px;
-            background: #4A90E2;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .add-btn:hover {
-            background: #3f7bc0;
-        }
-    </style>
-
-
-    <script>
-        let wallet = 0;
-        let selectedAmount = 0;
-        let upiID = "paytmqr5m9yhr@ptys";  // Your UPI ID
-
-        function openAEPS() {
-            const menu = document.getElementById("aepsMenu");
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
-        }
-
-        function openHisab() {
-            const box = document.getElementById("hisabBox");
-            box.style.display = box.style.display === "block" ? "none" : "block";
-        }
-
-        function addHisabEntry() {
-            let detail = prompt("Lena / Dena detail likhen:");
-            if (detail) {
-                let div = document.createElement("div");
-                div.className = "hisab-entry";
-                div.innerText = detail;
-                document.getElementById("hisabList").appendChild(div);
-            }
-        }
-
-        function logoutUser() {
-            window.location.href = "login.html";
-        }
-
-
-        // QUICK PAYMENT BUTTON CLICK
-        function quickAdd(amount) {
-            selectedAmount = amount;
-
-            let upiLink =
-                "upi://pay?pa=" + encodeURIComponent(upiID) +
-                "&pn=" + encodeURIComponent("Wallet Add") +
-                "&tn=" + encodeURIComponent("Add Money") +
-                "&am=" + encodeURIComponent(amount) +
-                "&cu=INR";
-
-            let qrURL = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(upiLink);
-
-            document.getElementById("qrImage").src = qrURL;
-            document.getElementById("qrBox").style.display = "block";
-
-            window.location.href = upiLink;  // Auto open Google Pay / PhonePe
-        }
-
-        function confirmPayment() {
-            wallet += Number(selectedAmount);
-            document.getElementById("walletBalance").innerText = wallet + " ₹";
-            alert("Payment Verified! Wallet Updated Successfully.");
-        }
-    </script>
-
+    /* responsive */
+    @media (max-width:640px){
+        .form-row { flex-direction:column; }
+        .qr-area { flex-direction:column; }
+    }
+</style>
 </head>
 <body>
 
 <header>
-    My Dashboard
-    <button class="logout-btn" onclick="logoutUser()">Logout</button>
+    <h1>Halal Wallet</h1>
+
+    <div class="top-actions">
+        <!-- existing buttons (Profile / Logout etc) -->
+        <button class="btn gray" onclick="location.href='profile.html'">Profile</button>
+        <button class="btn" id="adminBtn" onclick="openAdminLogin()">Admin</button>
+    </div>
 </header>
-
-<!-- WALLET BAR -->
-<div class="wallet-bar">
-    <b>Wallet Balance:</b> <span id="walletBalance">0 ₹</span>
-</div>
-
-
-<!-- ADD MONEY SYSTEM -->
-<div style="padding: 15px; margin: 10px; background: white; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
-
-    <h3>Add Money</h3>
-
-    <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <button onclick="quickAdd(200)" class="add-btn">₹200</button>
-        <button onclick="quickAdd(500)" class="add-btn">₹500</button>
-        <button onclick="quickAdd(1000)" class="add-btn">₹1000</button>
-        <button onclick="quickAdd(2000)" class="add-btn">₹2000</button>
-    </div>
-
-    <div id="qrBox" style="margin-top: 20px; display:none;">
-        <h4>Scan to Pay</h4>
-        <img id="qrImage" width="220" style="border-radius: 10px; border: 1px solid #ccc;">
-        <br><br>
-        <button onclick="confirmPayment()" style="padding: 10px 20px; background:#4A90E2; color:white; border:none; border-radius:8px; cursor:pointer;">Payment Done</button>
-    </div>
-</div>
-
-
 
 <div class="container">
 
+    <!-- Wallet top -->
+    <div class="wallet-panel">
+        <div class="wallet-left">
+            Wallet Balance: <span id="walletBalanceDisplay">0 ₹</span>
+            <div class="small">User: <span id="currentUserId">-</span></div>
+        </div>
+        <div class="wallet-right">
+            <button class="btn" onclick="openAddMoneyUI()">Add Money</button>
+            <button class="btn red" onclick="logoutUser()">Logout</button>
+        </div>
+    </div>
+
+    <!-- Add Money UI -->
+    <div id="addMoneyBlock" class="add-money-box" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <strong>Add Money Quick</strong>
+                <div class="hint">Select amount → app will open (GooglePay/PhonePe). If you paid, press "I HAVE PAID" to send request to admin.</div>
+            </div>
+            <div>
+                <button class="btn gray" onclick="closeAddMoneyUI()">Close</button>
+            </div>
+        </div>
+
+        <div class="quick-btns" style="margin-top:12px;">
+            <button class="add-btn" onclick="quickAdd(200)">₹200</button>
+            <button class="add-btn" onclick="quickAdd(500)">₹500</button>
+            <button class="add-btn" onclick="quickAdd(1000)">₹1000</button>
+            <button class="add-btn" onclick="quickAdd(2000)">₹2000</button>
+        </div>
+
+        <div style="margin-top:10px;">
+            <label class="small">Or enter custom amount</label>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+                <input id="customAmountInput" type="number" placeholder="Custom amount" style="flex:1; padding:10px; border-radius:8px; border:1px solid #ddd;">
+                <button class="add-btn" onclick="customAdd()">Proceed</button>
+            </div>
+        </div>
+
+        <!-- QR box / actions -->
+        <div id="qrBox" class="qr-area" style="display:none;">
+            <div>
+                <div style="font-weight:700; margin-bottom:8px;">Scan QR or app opened</div>
+                <img id="qrImage" src="" alt="QR code">
+                <div class="hint">If your UPI app didn't open automatically, scan this QR using your UPI app.</div>
+            </div>
+
+            <div class="actions">
+                <button class="btn" onclick="iHavePaid()">I HAVE PAID (Send Request to Admin)</button>
+                <a id="whatsappLink" class="small" href="#" target="_blank" style="text-decoration:none; color:#0b7a0b;">Notify Admin on WhatsApp Group</a>
+                <div class="small" style="margin-top:8px;">Selected: <strong id="selectedAmountLabel">-</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services Grid -->
     <div class="grid">
-
-        <div class="box"><div class="icon">📱</div>Mobile Recharge</div>
-        <div class="box"><div class="icon">📺</div>DTH Recharge</div>
-        <div class="box"><div class="icon">💡</div>Electricity Bill</div>
-        <div class="box"><div class="icon">💸</div>Send Money</div>
-
-        <div class="box" onclick="openAEPS()">
-            <div class="icon">🧾</div>
-            AEPS Service
-        </div>
-
-        <div class="box" onclick="openHisab()">
-            <div class="icon">📘</div>
-            Personal Hisab
-        </div>
-
-        <div class="box">
-            <div class="icon">📥</div>
-            Mudarabah Apply
-        </div>
-
-        <div class="box">
-            <div class="icon">🚓</div>
-            Chalan Deposit
-        </div>
-
-        <div class="box">
-            <div class="icon">💻</div>
-            Accept UPI Payment
-        </div>
-
+        <div class="card"><span class="emoji">📱</span><p>Mobile Recharge</p></div>
+        <div class="card"><span class="emoji">📺</span><p>DTH Recharge</p></div>
+        <div class="card"><span class="emoji">💡</span><p>Electricity Bill</p></div>
+        <div class="card"><span class="emoji">💸</span><p>Send Money</p></div>
+        <div class="card" onclick="toggleAEPS()"><span class="emoji">🧾</span><p>AEPS Service</p></div>
+        <div class="card" onclick="toggleHisab()"><span class="emoji">📘</span><p>Personal Hisab</p></div>
+        <div class="card"><span class="emoji">📥</span><p>Mudarabah Apply</p></div>
+        <div class="card"><span class="emoji">🚓</span><p>Challan Deposit</p></div>
+        <div class="card"><span class="emoji">📤</span><p>Accept UPI Payment</p></div>
     </div>
 
-
-    <!-- AEPS Sub Menu -->
-    <div id="aepsMenu" class="aeps-box">
-        <div class="sub-box">🔍 Balance Enquiry</div>
-        <div class="sub-box">💰 Cash Withdrawal</div>
-        <div class="sub-box">📤 Cash Deposit</div>
-        <div class="sub-box">📄 Mini Statement</div>
+    <!-- AEPS list -->
+    <div id="aepsList" style="display:none; margin-top:12px;">
+        <div class="card"><p class="small">🔍 Balance Enquiry</p></div>
+        <div class="card"><p class="small">💰 Cash Withdrawal</p></div>
+        <div class="card"><p class="small">📤 Cash Deposit</p></div>
+        <div class="card"><p class="small">📄 Mini Statement</p></div>
     </div>
 
-
-    <!-- PERSONAL HISAB -->
-    <div id="hisabBox">
-        <h3>📘 Personal Hisab (Digital Bahi Khata)</h3>
-        <button onclick="addHisabEntry()">➕ Add Entry</button>
-        <div id="hisabList"></div>
+    <!-- Personal Hisab area -->
+    <div id="hisabArea" style="display:none; margin-top:12px;">
+        <div class="card">
+            <h3>📘 Personal Hisab</h3>
+            <button class="btn" onclick="addHisabEntry()">+ Add Entry</button>
+            <div id="hisabList" style="margin-top:10px;"></div>
+        </div>
     </div>
 
 </div>
 
+<!-- Admin Login Modal -->
+<div id="adminLoginBackdrop" class="modal-backdrop">
+    <div class="modal">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="title">Admin Login</div>
+            <div><button class="btn gray" onclick="closeAdminLogin()">Close</button></div>
+        </div>
+
+        <div style="margin-top:10px;">
+            <div class="form-row">
+                <input id="adminUser" placeholder="Admin Username" />
+                <input id="adminPass" placeholder="Admin Password" type="password" />
+            </div>
+            <div style="margin-top:10px; display:flex; gap:8px;">
+                <button class="btn" onclick="adminLogin()">Login as Admin</button>
+                <button class="btn gray" onclick="openAdminPanelIfLogged()">Open Panel (if logged)</button>
+            </div>
+            <div id="adminLoginMsg" class="small" style="margin-top:8px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Panel Modal -->
+<div id="adminPanelBackdrop" class="modal-backdrop">
+    <div class="modal" style="max-width:900px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="title">Admin Panel - Payment Requests</div>
+            <div>
+                <button class="btn red" onclick="adminLogout()">Logout Admin</button>
+                <button class="btn gray" onclick="closeAdminPanel()">Close</button>
+            </div>
+        </div>
+
+        <div style="margin-top:12px;">
+            <div class="small">Pending / processed payment requests from users.</div>
+
+            <table id="requestsTable">
+                <thead>
+                    <tr><th>Req ID</th><th>User ID</th><th>Amount</th><th>Remark</th><th>Time</th><th>Status</th><th>Action</th></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <div style="margin-top:10px;">
+                <button class="btn" onclick="refreshRequests()">Refresh</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ------------------ Initialization ------------------ */
+const ADMIN_USERNAME = "226492031189";
+const ADMIN_PASSWORD = "Cavpa3961k";
+const UPI_ID = "paytmqr5m9yhr@ptys";
+const WHATSAPP_GROUP_LINK = "https://chat.whatsapp.com/HFQEeaC9U838OFgfGSKDD0?mode=hqrt1";
+
+function init(){
+    // current logged-in user id (from signup/login flow) - keep compatibility
+    const uid = localStorage.getItem('userid') || 'Guest';
+    document.getElementById('currentUserId').innerText = uid;
+    // wallet
+    if(!localStorage.getItem('walletBalance')) localStorage.setItem('walletBalance','0');
+    updateWalletDisplay();
+    // ensure requests array exists
+    if(!localStorage.getItem('paymentRequests')) localStorage.setItem('paymentRequests', JSON.stringify([]));
+}
+init();
+
+/* ------------------ wallet UI ------------------ */
+function updateWalletDisplay(){
+    const val = Number(localStorage.getItem('walletBalance') || 0);
+    document.getElementById('walletBalanceDisplay').innerText = val + ' ₹';
+}
+
+/* ------------------ Add Money UI functions ------------------ */
+function openAddMoneyUI(){
+    document.getElementById('addMoneyBlock').style.display = 'block';
+}
+function closeAddMoneyUI(){
+    document.getElementById('addMoneyBlock').style.display = 'none';
+}
+function quickAdd(amount){
+    // set selected amount, prepare UPI link, generate QR, open UPI intent
+    preparePayment(amount);
+}
+function customAdd(){
+    const v = Number(document.getElementById('customAmountInput').value);
+    if(!v || v <= 0){ alert('Enter valid amount'); return; }
+    preparePayment(v);
+}
+function preparePayment(amount){
+    // create UPI link
+    const upiLink = "upi://pay?pa="+ encodeURIComponent(UPI_ID) +
+                    "&pn="+ encodeURIComponent('Halal Wallet') +
+                    "&tn="+ encodeURIComponent('Add Money') +
+                    "&am="+ encodeURIComponent(amount) +
+                    "&cu=INR";
+    // show QR
+    const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="+ encodeURIComponent(upiLink);
+    document.getElementById('qrImage').src = qrUrl;
+    document.getElementById('selectedAmountLabel').innerText = '₹' + amount;
+    document.getElementById('qrBox').style.display = 'flex';
+    // whatsapp notify link
+    document.getElementById('whatsappLink').href = WHATSAPP_GROUP_LINK;
+    // store last selected amount in session storage (so iHavePaid uses it)
+    sessionStorage.setItem('lastAddAmount', String(amount));
+    // attempt to open UPI app
+    setTimeout(()=>{ window.location.href = upiLink; }, 200);
+}
+
+/* -------------- When user confirms they've paid -------------- */
+function iHavePaid(){
+    const amount = Number(sessionStorage.getItem('lastAddAmount') || 0);
+    const uid = localStorage.getItem('userid') || 'Guest';
+    if(!amount || amount <= 0){ alert('Please start payment first (choose an amount)'); return; }
+
+    // create request object
+    const requests = JSON.parse(localStorage.getItem('paymentRequests') || '[]');
+    const req = {
+        id: 'REQ' + Date.now(),
+        userId: uid,
+        amount: amount,
+        remark: 'User reported payment',
+        time: new Date().toLocaleString(),
+        status: 'pending'
+    };
+    requests.push(req);
+    localStorage.setItem('paymentRequests', JSON.stringify(requests));
+    alert('Payment request sent to admin. Admin will approve/reject soon.');
+    // optionally hide QR area
+    //document.getElementById('qrBox').style.display = 'none';
+    renderRequestsInAdmin(); // keep admin view updated if open
+}
+
+/* ---------------- Admin login modal ---------------- */
+function openAdminLogin(){
+    document.getElementById('adminLoginBackdrop').style.display = 'flex';
+    document.getElementById('adminLoginMsg').innerText = '';
+    document.getElementById('adminUser').value = '';
+    document.getElementById('adminPass').value = '';
+}
+function closeAdminLogin(){ document.getElementById('adminLoginBackdrop').style.display = 'none'; }
+
+function adminLogin(){
+    const u = document.getElementById('adminUser').value.trim();
+    const p = document.getElementById('adminPass').value;
+    if(u === ADMIN_USERNAME && p === ADMIN_PASSWORD){
+        // mark admin logged (simple)
+        sessionStorage.setItem('isAdminLogged','true');
+        document.getElementById('adminLoginMsg').innerText = 'Admin login successful';
+        setTimeout(()=>{ closeAdminLogin(); openAdminPanel(); }, 500);
+    } else {
+        document.getElementById('adminLoginMsg').innerText = 'Invalid admin credentials';
+    }
+}
+
+/* ----------------- Admin panel UI ----------------- */
+function openAdminPanelIfLogged(){
+    if(sessionStorage.getItem('isAdminLogged') === 'true') openAdminPanel();
+    else alert('Admin not logged. Please login first.');
+}
+
+function openAdminPanel(){
+    // show modal
+    document.getElementById('adminPanelBackdrop').style.display = 'flex';
+    renderRequestsInAdmin();
+}
+function closeAdminPanel(){ document.getElementById('adminPanelBackdrop').style.display = 'none'; }
+
+/* render request list */
+function renderRequestsInAdmin(){
+    const tbody = document.querySelector('#requestsTable tbody');
+    tbody.innerHTML = '';
+    const requests = JSON.parse(localStorage.getItem('paymentRequests') || '[]').slice().reverse(); // latest first
+    if(requests.length === 0){
+        tbody.innerHTML = '<tr><td colspan="7" class="small">No requests</td></tr>';
+        return;
+    }
+    requests.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.id}</td>
+                        <td>${r.userId}</td>
+                        <td>₹${r.amount}</td>
+                        <td>${r.remark}</td>
+                        <td>${r.time}</td>
+                        <td><span class="status ${r.status==='pending'?'pending':(r.status==='approved'?'approved':'rejected')}">${r.status.toUpperCase()}</span></td>
+                        <td></td>`;
+        const actionTd = tr.querySelector('td:last-child');
+        if(r.status === 'pending'){
+            const btnApprove = document.createElement('button');
+            btnApprove.className = 'btn';
+            btnApprove.style.marginRight = '6px';
+            btnApprove.innerText = 'Approve';
+            btnApprove.onclick = ()=> approveRequest(r.id);
+            const btnReject = document.createElement('button');
+            btnReject.className = 'btn gray';
+            btnReject.innerText = 'Reject';
+            btnReject.onclick = ()=> rejectRequest(r.id);
+            actionTd.appendChild(btnApprove);
+            actionTd.appendChild(btnReject);
+        } else {
+            actionTd.innerHTML = '<span class="small">No actions</span>';
+        }
+        tbody.appendChild(tr);
+    });
+}
+
+/* ---------------- Approve / Reject logic ---------------- */
+function approveRequest(reqId){
+    const requests = JSON.parse(localStorage.getItem('paymentRequests') || '[]');
+    const idx = requests.findIndex(r => r.id === reqId);
+    if(idx === -1) return alert('Request not found');
+    if(requests[idx].status !== 'pending') return alert('Already processed');
+    // update status
+    requests[idx].status = 'approved';
+    requests[idx].processedBy = 'admin';
+    requests[idx].processedAt = new Date().toLocaleString();
+    // add to wallet
+    const oldBal = Number(localStorage.getItem('walletBalance') || 0);
+    const newBal = oldBal + Number(requests[idx].amount || 0);
+    localStorage.setItem('walletBalance', String(newBal));
+    localStorage.setItem('paymentRequests', JSON.stringify(requests));
+    updateWalletDisplay();
+    renderRequestsInAdmin();
+    alert('Request approved and wallet updated (+'+requests[idx].amount+'₹)');
+}
+
+function rejectRequest(reqId){
+    const requests = JSON.parse(localStorage.getItem('paymentRequests') || '[]');
+    const idx = requests.findIndex(r => r.id === reqId);
+    if(idx === -1) return alert('Request not found');
+    if(requests[idx].status !== 'pending') return alert('Already processed');
+    // update status
+    requests[idx].status = 'rejected';
+    requests[idx].processedBy = 'admin';
+    requests[idx].processedAt = new Date().toLocaleString();
+    localStorage.setItem('paymentRequests', JSON.stringify(requests));
+    renderRequestsInAdmin();
+    alert('Request rejected.');
+}
+
+/* admin logout */
+function adminLogout(){
+    sessionStorage.removeItem('isAdminLogged');
+    closeAdminPanel();
+    alert('Admin logged out');
+}
+
+/* ---------------- misc UI toggles ---------------- */
+function toggleAEPS(){
+    const el = document.getElementById('aepsList');
+    el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+function toggleHisab(){
+    const el = document.getElementById('hisabArea');
+    el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+function addHisabEntry(){
+    const txt = prompt('Lena/Dena detail likhen (example: Ram ne 500 diya)');
+    if(!txt) return;
+    const div = document.createElement('div');
+    div.className = 'hisab-entry';
+    div.innerText = txt + ' — ' + new Date().toLocaleString();
+    document.getElementById('hisabList').prepend(div);
+}
+
+/* ---------------- logout function for user -------------- */
+function logoutUser(){
+    // If you maintain logged-in state, clear it here
+    // localStorage.removeItem('userid');   // uncomment if you want to force logout
+    location.href = 'login.html';
+}
+
+/* refresh requests */
+function refreshRequests(){ renderRequestsInAdmin(); }
+
+/* When page loads, auto render admin requests if admin logged already */
+window.addEventListener('load', ()=>{
+    if(sessionStorage.getItem('isAdminLogged') === 'true') {
+        // admin is logged; nothing to do until open panel
+    }
+});
+</script>
 </body>
 </html>

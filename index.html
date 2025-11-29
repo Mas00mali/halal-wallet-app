@@ -35,6 +35,27 @@
             cursor: pointer;
         }
 
+        /* Wallet Bar */
+        .wallet-bar {
+            background: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        .add-money {
+            background: #4A90E2;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
         .container {
             padding: 15px;
         }
@@ -55,9 +76,7 @@
             transition: 0.2s;
         }
 
-        .box:hover {
-            transform: scale(1.05);
-        }
+        .box:hover { transform: scale(1.05); }
 
         .icon {
             font-size: 35px;
@@ -65,7 +84,7 @@
             color: #4A90E2;
         }
 
-        /* AEPS sub menu */
+        /* AEPS Sub Menu */
         .aeps-box {
             display: none;
             margin-top: 15px;
@@ -78,16 +97,53 @@
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.15);
         }
+
+        /* Personal Hisab Modal */
+        #hisabBox {
+            display: none;
+            background: white;
+            padding: 15px;
+            margin: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .hisab-entry {
+            background: #e7f0ff;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+        }
     </style>
 
     <script>
+        let wallet = 0;
+
+        function addMoney() {
+            let amount = prompt("Enter amount to add in wallet:");
+            if (amount && !isNaN(amount)) {
+                wallet += Number(amount);
+                document.getElementById("walletBalance").innerText = wallet + " ₹";
+            }
+        }
+
         function openAEPS() {
             const menu = document.getElementById("aepsMenu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
 
-            if (menu.style.display === "block") {
-                menu.style.display = "none";
-            } else {
-                menu.style.display = "block";
+        function openHisab() {
+            const box = document.getElementById("hisabBox");
+            box.style.display = box.style.display === "block" ? "none" : "block";
+        }
+
+        function addHisabEntry() {
+            let detail = prompt("Lena / Dena detail likhen:");
+            if (detail) {
+                let div = document.createElement("div");
+                div.className = "hisab-entry";
+                div.innerText = detail;
+                document.getElementById("hisabList").appendChild(div);
             }
         }
 
@@ -103,6 +159,12 @@
     My Dashboard
     <button class="logout-btn" onclick="logoutUser()">Logout</button>
 </header>
+
+<!-- WALLET BAR -->
+<div class="wallet-bar">
+    <div><b>Wallet Balance:</b> <span id="walletBalance">0 ₹</span></div>
+    <div class="add-money" onclick="addMoney()">Add Money</div>
+</div>
 
 <div class="container">
 
@@ -134,6 +196,11 @@
         </div>
 
         <div class="box">
+            <div class="icon">📘</div>
+            Personal Hisab
+        </div>
+
+        <div class="box">
             <div class="icon">📥</div>
             Mudarabah Apply
         </div>
@@ -152,12 +219,17 @@
 
     <!-- AEPS Sub Menu -->
     <div id="aepsMenu" class="aeps-box">
-
         <div class="sub-box">🔍 Balance Enquiry</div>
         <div class="sub-box">💰 Cash Withdrawal</div>
         <div class="sub-box">📤 Cash Deposit</div>
         <div class="sub-box">📄 Mini Statement</div>
+    </div>
 
+    <!-- PERSONAL HISAB BOX -->
+    <div id="hisabBox">
+        <h3>📘 Personal Hisab (Digital Bahi Khata)</h3>
+        <button onclick="addHisabEntry()">➕ Add Entry</button>
+        <div id="hisabList"></div>
     </div>
 
 </div>

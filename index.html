@@ -3,70 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Service Dashboard</title>
+    <title>Dashboard + Admin Panel</title>
 
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
             margin: 0;
-            padding: 0;
+            background: #f5f5f5;
         }
 
         header {
             background: #4A90E2;
             color: white;
-            padding: 18px;
+            padding: 15px;
+            font-size: 20px;
             text-align: center;
-            font-size: 22px;
-            font-weight: bold;
             position: relative;
-        }
-
-        .logout-btn {
-            position: absolute;
-            right: 15px;
-            top: 12px;
-            padding: 8px 14px;
-            background: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
         }
 
         .admin-btn {
             position: absolute;
             left: 15px;
             top: 12px;
-            padding: 8px 14px;
+            padding: 6px 12px;
+            border-radius: 8px;
             background: #222;
             color: white;
-            border: none;
-            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .logout-btn {
+            position: absolute;
+            right: 15px;
+            top: 12px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: #ff4d4d;
+            color: white;
             cursor: pointer;
         }
 
         .wallet-bar {
             background: white;
-            padding: 15px;
-            margin: 10px;
-            border-radius: 12px;
+            padding: 12px;
+            margin: 12px;
+            border-radius: 10px;
+            font-size: 18px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            font-size: 18px;
         }
 
-        .add-money {
+        .add-money-btn {
             background: #4A90E2;
             color: white;
-            padding: 8px 12px;
+            padding: 7px 12px;
             border-radius: 8px;
             cursor: pointer;
         }
 
+        .amount-box {
+            display: none;
+            padding: 15px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid #aaa;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 12px;
+            background: green;
+            color: white;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+        }
+
+        #timerBox {
+            display: none;
+            margin: 10px;
+            padding: 12px;
+            background: #fff3cd;
+            border-left: 5px solid #ff9800;
+            border-radius: 8px;
+            font-size: 17px;
+        }
+
+        /* Grid Boxes */
         .container { padding: 15px; }
 
         .grid {
@@ -77,123 +108,78 @@
 
         .box {
             background: white;
-            border-radius: 12px;
-            padding: 20px 10px;
             text-align: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        .box:hover { transform: scale(1.05); }
+        .icon { font-size: 35px; }
 
-        .icon {
-            font-size: 35px;
-            margin-bottom: 8px;
-            color: #4A90E2;
-        }
-
-        .amount-box { 
-            margin-top: 15px; 
-            display: none;
-        }
-
-        .amount-btn {
-            padding: 12px;
-            width: 100%;
-            background: #4A90E2;
-            color: white;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-        #paymentTimerBox {
-            display: none;
-            background: #fff3cd;
-            padding: 12px;
-            margin: 10px;
-            border-radius: 10px;
-            border-left: 5px solid #ff9800;
-            font-size: 16px;
-        }
-
-        .aeps-box { display: none; }
-
-        .sub-box {
-            background: #ffffff;
-            padding: 15px;
-            margin-top: 10px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-        }
-
-        #hisabBox {
+        /* Admin Panel Box */
+        #adminPanel {
             display: none;
             background: white;
             padding: 15px;
-            margin: 15px;
             border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            margin: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-        .hisab-entry {
-            background: #e7f0ff;
+
+        .req-box {
+            padding: 12px;
+            background: #eef5ff;
             margin-top: 10px;
-            padding: 10px;
-            border-radius: 8px;
+            border-radius: 10px;
         }
+
+        .admin-btn-small {
+            padding: 6px 12px;
+            margin-right: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .approve { background: green; color: white; }
+        .reject { background: red; color: white; }
+
     </style>
 
     <script>
-
-        let wallet = Number(localStorage.getItem("userWallet") || 0);
+        let wallet = Number(localStorage.getItem("wallet") || 0);
         let timerInterval = null;
 
         window.onload = function () {
             document.getElementById("walletBalance").innerText = wallet + " ₹";
             loadTimer();
+            loadAdminRequests();
         };
 
         function logoutUser() {
-            window.location.href = "login.html";
+            alert("Logged out.");
         }
 
-        function openAEPS() {
-            const menu = document.getElementById("aepsMenu");
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
-        }
-
-        function openHisab() {
-            const box = document.getElementById("hisabBox");
-            box.style.display = box.style.display === "block" ? "none" : "block";
-        }
-
-        function addHisabEntry() {
-            let detail = prompt("Lena / Dena detail likhen:");
-            if (detail) {
-                let div = document.createElement("div");
-                div.className = "hisab-entry";
-                div.innerText = detail;
-                document.getElementById("hisabList").appendChild(div);
-            }
-        }
-
-        // ADD MONEY
-        function addMoney() {
+        // Add Money
+        function openAddMoney() {
             document.getElementById("amountBox").style.display = "block";
         }
 
-        function payAmount(amount) {
+        function startPayment() {
+            let amount = document.getElementById("amountInput").value;
 
-            if (localStorage.getItem("paymentLock")) {
-                alert("Aapka pichla payment pending hai. Admin approval ka wait karein.");
+            if (!amount || isNaN(amount) || amount <= 0) {
+                alert("Sahi amount likho!");
+                return;
+            }
+
+            if (localStorage.getItem("lock")) {
+                alert("Pichla payment pending hai, admin approval ka wait karein.");
                 return;
             }
 
             let remark = prompt("Remark likhen:");
-
             let req = {
                 id: Date.now(),
                 amount: amount,
@@ -201,14 +187,16 @@
                 status: "pending"
             };
 
-            let all = JSON.parse(localStorage.getItem("paymentRequests") || "[]");
+            let all = JSON.parse(localStorage.getItem("requests") || "[]");
             all.push(req);
-            localStorage.setItem("paymentRequests", JSON.stringify(all));
+            localStorage.setItem("requests", JSON.stringify(all));
 
-            localStorage.setItem("paymentLock", "true");
+            localStorage.setItem("lock", "true");
 
-            startTimer(5);
+            // Timer 1 Minute
+            startTimer(1);
 
+            // UPI Intent
             let upiURL =
                 "upi://pay?pa=paytmqr5m9yhr@ptys&pn=Admin&am=" +
                 amount +
@@ -217,49 +205,105 @@
 
             window.location.href = upiURL;
 
-            alert("Payment Request Admin tak bhej diya गया.\nApproval ka wait karein.");
+            alert("Payment request admin ko bhej diya gaya.");
         }
 
         function startTimer(min) {
             let end = Date.now() + min * 60 * 1000;
-            localStorage.setItem("paymentTimerEnd", end);
+            localStorage.setItem("timerEnd", end);
 
-            document.getElementById("paymentTimerBox").style.display = "block";
+            document.getElementById("timerBox").style.display = "block";
 
-            timerInterval = setInterval(function () {
+            timerInterval = setInterval(() => {
                 let now = Date.now();
                 let diff = end - now;
 
                 if (diff <= 0) {
                     clearInterval(timerInterval);
-                    localStorage.removeItem("paymentTimerEnd");
-                    document.getElementById("paymentTimerBox").style.display = "none";
-                    alert("Time End! Payment auto cancel.");
-                    localStorage.removeItem("paymentLock");
+                    document.getElementById("timerBox").style.display = "none";
+                    localStorage.removeItem("timerEnd");
+                    localStorage.removeItem("lock");
+                    alert("Timer End — Payment Cancel!");
                     return;
                 }
 
-                let m = Math.floor(diff / 60000);
-                let s = Math.floor((diff % 60000) / 1000);
-
-                document.getElementById("timerCountdown").innerText =
-                    (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+                let s = Math.floor(diff / 1000);
+                document.getElementById("timerText").innerText = s + " sec";
 
             }, 1000);
         }
 
         function loadTimer() {
-            let end = localStorage.getItem("paymentTimerEnd");
+            let end = localStorage.getItem("timerEnd");
             if (!end) return;
 
             if (Date.now() > end) {
-                localStorage.removeItem("paymentTimerEnd");
+                localStorage.removeItem("timerEnd");
                 return;
             }
 
-            document.getElementById("paymentTimerBox").style.display = "block";
+            document.getElementById("timerBox").style.display = "block";
             startTimer(0);
         }
+
+        // ADMIN PANEL
+        function openAdmin() {
+            document.getElementById("adminPanel").style.display = "block";
+        }
+
+        function loadAdminRequests() {
+            let list = JSON.parse(localStorage.getItem("requests") || "[]");
+            let box = document.getElementById("adminRequests");
+            box.innerHTML = "";
+
+            list.forEach(r => {
+                if (r.status === "pending") {
+                    box.innerHTML += `
+                    <div class='req-box'>
+                        <b>Amount:</b> ₹${r.amount}<br>
+                        <b>Remark:</b> ${r.remark}<br><br>
+                        <button class="admin-btn-small approve" onclick="approve(${r.id})">Approve</button>
+                        <button class="admin-btn-small reject" onclick="reject(${r.id})">Reject</button>
+                    </div>
+                    `;
+                }
+            });
+        }
+
+        function approve(id) {
+            let all = JSON.parse(localStorage.getItem("requests"));
+            let req = all.find(r => r.id === id);
+
+            wallet += Number(req.amount);
+            localStorage.setItem("wallet", wallet);
+
+            // Timer Stop
+            localStorage.removeItem("timerEnd");
+            localStorage.removeItem("lock");
+
+            alert("Approved! Wallet Updated.");
+
+            req.status = "approved";
+            localStorage.setItem("requests", JSON.stringify(all));
+
+            location.reload();
+        }
+
+        function reject(id) {
+            let all = JSON.parse(localStorage.getItem("requests"));
+            let req = all.find(r => r.id === id);
+
+            req.status = "rejected";
+            localStorage.setItem("requests", JSON.stringify(all));
+
+            localStorage.removeItem("timerEnd");
+            localStorage.removeItem("lock");
+
+            alert("Payment Rejected!");
+
+            location.reload();
+        }
+
     </script>
 
 </head>
@@ -267,63 +311,47 @@
 <body>
 
 <header>
-    <button class="admin-btn" onclick="window.location='admin.html'">Admin</button>
+    <button class="admin-btn" onclick="openAdmin()">Admin</button>
     My Dashboard
     <button class="logout-btn" onclick="logoutUser()">Logout</button>
 </header>
 
+<!-- Wallet -->
 <div class="wallet-bar">
     <div><b>Wallet Balance:</b> <span id="walletBalance">0 ₹</span></div>
-    <div class="add-money" onclick="addMoney()">Add Money</div>
+    <div class="add-money-btn" onclick="openAddMoney()">Add Money</div>
 </div>
 
-<div id="paymentTimerBox">
-    ⏳ Payment Time Remaining: <b id="timerCountdown">00:00</b>
+<!-- Timer -->
+<div id="timerBox">
+    Payment Time Left: <b id="timerText">60 sec</b>
 </div>
 
+<!-- Add Money Form -->
+<div id="amountBox" class="amount-box">
+    <input type="number" id="amountInput" class="input-field" placeholder="Enter Amount">
+    <button class="pay-btn" onclick="startPayment()">Proceed to Pay</button>
+</div>
+
+<!-- User Services -->
 <div class="container">
-
-    <div id="amountBox" class="amount-box">
-        <button class="amount-btn" onclick="payAmount(200)">₹200 Add</button>
-        <button class="amount-btn" onclick="payAmount(500)">₹500 Add</button>
-        <button class="amount-btn" onclick="payAmount(1000)">₹1000 Add</button>
-        <button class="amount-btn" onclick="payAmount(2000)">₹2000 Add</button>
-    </div>
-
     <div class="grid">
-
         <div class="box"><div class="icon">📱</div>Mobile Recharge</div>
         <div class="box"><div class="icon">📺</div>DTH Recharge</div>
         <div class="box"><div class="icon">💡</div>Electricity Bill</div>
         <div class="box"><div class="icon">💸</div>Send Money</div>
-
-        <div class="box" onclick="openAEPS()">
-            <div class="icon">🧾</div>AEPS Service
-        </div>
-
-        <div class="box" onclick="openHisab()">
-            <div class="icon">📘</div>Personal Hisab
-        </div>
-
+        <div class="box"><div class="icon">🧾</div>AEPS</div>
+        <div class="box"><div class="icon">📘</div>Personal Hisab</div>
         <div class="box"><div class="icon">📥</div>Mudarabah Apply</div>
-        <div class="box"><div class="icon">🚓</div>Chalan Deposit</div>
-        <div class="box"><div class="icon">📤</div>Accept UPI Payment</div>
-
+        <div class="box"><div class="icon">🚓</div>Challan Deposit</div>
+        <div class="box"><div class="icon">💻</div>Accept UPI</div>
     </div>
+</div>
 
-    <div id="aepsMenu" class="aeps-box">
-        <div class="sub-box">🔍 Balance Enquiry</div>
-        <div class="sub-box">💰 Cash Withdrawal</div>
-        <div class="sub-box">📤 Cash Deposit</div>
-        <div class="sub-box">📄 Mini Statement</div>
-    </div>
-
-    <div id="hisabBox">
-        <h3>📘 Personal Hisab</h3>
-        <button onclick="addHisabEntry()">➕ Add Entry</button>
-        <div id="hisabList"></div>
-    </div>
-
+<!-- Admin Panel -->
+<div id="adminPanel">
+    <h2>Admin Panel</h2>
+    <div id="adminRequests"></div>
 </div>
 
 </body>

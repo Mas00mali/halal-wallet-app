@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Challan Deposit</title>
+<style>body{font-family:Arial;margin:0;background:#f4f6f6}header{background:#0b7a0b;color:#fff;padding:12px} .container{max-width:700px;margin:12px auto;padding:12px} input,select{padding:10px;border-radius:6px;border:1px solid #ddd;width:100%;margin-top:8px} .btn{padding:10px;background:#0b7a0b;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-top:12px}</style>
+</head>
+<body>
+<header><strong>Challan Deposit</strong></header>
+<div class="container">
+  <label>Vehicle Number (example: UP531312)</label><input id="veh" placeholder="Enter vehicle number">
+  <label>Type</label>
+  <select id="vtype"><option value="bike">Bike</option><option value="car">Car</option><option value="other">Other</option></select>
+  <button class="btn" onclick="submitChallan()">Submit & Open eChallan</button>
+  <div style="margin-top:12px"><a href="index.html">← Dashboard</a></div>
+</div>
+
+<script>
+ function submitChallan(){
+   const v=document.getElementById('veh').value.trim(); const t=document.getElementById('vtype').value;
+   if(!v){ alert('Enter vehicle number'); return; }
+   // open parivahan challan page
+   const url='https://echallan.parivahan.gov.in/index/accused-challan';
+   window.open(url,'_blank');
+ }
+</script>
+</body>
+</html>

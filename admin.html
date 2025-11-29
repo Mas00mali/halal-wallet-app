@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin Panel</title>
+<style>
+ body{font-family:Arial;margin:0;background:#f4f6f6}
+ header{background:#0b7a0b;color:#fff;padding:12px}
+ .container{max-width:1100px;margin:12px auto;padding:12px}
+ input{padding:8px;border-radius:6px;border:1px solid #ddd}
+ .btn{padding:8px 10px;border:none;border-radius:6px;background:#0b7a0b;color:#fff;cursor:pointer}
+ table{width:100%;border-collapse:collapse;margin-top:10px}
+ th,td{padding:8px;border:1px solid #eee;text-align:left}
+</style>
+</head>
+<body>
+<header><strong>Admin Panel</strong></header>
+<div class="container">
+  <div>
+    <label>Username</label>
+    <input id="aUser" placeholder="admin username"/>
+    <label style="margin-left:8px">Password</label>
+    <input id="aPass" type="password" placeholder="password"/>
+    <button class="btn" onclick="login()">Login</button>
+    <span id="msg" style="color:red;margin-left:8px"></span>
+  </div>
+
+  <div id="panel" style="display:none;margin-top:12px">
+    <h3>Pending Requests</h3>
+    <table>
+      <thead><tr><th>ReqID</th><th>User</th><th>Mobile</th><th>Amount</th><th>Remark</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div style="margin-top:10px">
+      <button class="btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+</div>
+
+<script>
+ const ADMIN_USER = '226492031189';
+ const ADMIN_PASS = 'Cavpa3961k';
+
+ function login(){
+   const u=document.getElementById('aUser').value.trim();
+   const p=document.getElementById('aPass').value;
+   if(u===ADMIN_USER && p===ADMIN_PASS){
+     sessionStorage.setItem('isAdmin','1');
+     document.getElementById('panel').style.display='block';
+     document.getElementById('msg').innerText='';
+     render();
+   } else {
+     document.getElementById('msg').innerText='Invalid credentials';
+   }
+ }
+
+ function logout(){ sessionStorage.removeItem('isAdmin'); document.getElementById('panel').style.display='none'; }
+
+ function render(){
+   const tbody = document.getElementById('tbody');
+   tbody.innerHTML='';
+   const reqs = JSON.parse(localStorage.getItem('paymentRequests')||'[]').slice().reverse();
+   if(reqs.length===0) { tbody.innerHTML='<tr><td colspan="8">No requests</td></tr>'; return; }
+   reqs.forEach(r=>{
+     const tr=document.createElement('tr');
+     tr.innerHTML=`<td>${r.id}</td><td>${r.userId||'Guest'}</td><td>${r.mobile||'-'}</td><td>₹${r.amount}</td><td>${r.remark}</td><td>${r.time}</td><td>${r.status}</td><td></td>`;
+     const td=tr.querySelector('td:last-child');
+     if(r.status==='pending'){
+       const a=document.createElement('button'); a.className='btn'; a.innerText='Approve'; a.onclick=()=>approve(r.id);
+       const b=document.createElement('button'); b.style.marginLeft='6px'; b.className='btn'; b.style.background='#d9534f'; b.innerText='Reject'; b.onclick=()=>rejectReq(r.id);
+       td.appendChild(a); td.appendChild(b);
+     } else td.innerText='-';
+     tbody.appendChild(tr);
+   });
+ }
+
+ function approve(id){
+   const reqs=JSON.parse(localStorage.getItem('paymentRequests')||'[]');
+   const i=reqs.findIndex(x=>x.id===id);
+   if(i===-1) return alert('not found');
+   reqs[i].status='approved';
+   reqs[i].processedAt=new Date().toLocaleString();
+   localStorage.setItem('paymentRequests',JSON.stringify(reqs));
+   // credit user
+   const balances=JSON.parse(localStorage.getItem('balances')||'{}');
+   const uid=reqs[i].userId||'Guest';
+   balances[uid]=(Number(balances[uid]||0)+Number(reqs[i].amount||0));
+   localStorage.setItem('balances',JSON.stringify(balances));
+   // stop timer & cleanup locks for user
+   localStorage.removeItem('paymentTimerEnd_'+id);
+   localStorage.removeItem('paymentLock_'+uid);
+   localStorage.removeItem('lastRequestId_'+uid);
+   alert('Approved and wallet credited');
+   render();
+ }
+
+ function rejectReq(id){
+   const reqs=JSON.parse(localStorage.getItem('paymentRequests')||'[]');
+   const i=reqs.findIndex(x=>x.id===id);
+   if(i===-1) return alert('not found');
+   reqs[i].status='rejected';
+   reqs[i].processedAt=new Date().toLocaleString();
+   localStorage.setItem('paymentRequests',JSON.stringify(reqs));
+   // cleanup locks
+   const uid=reqs[i].userId||'Guest';
+   localStorage.removeItem('paymentTimerEnd_'+id);
+   localStorage.removeItem('paymentLock_'+uid);
+   localStorage.removeItem('lastRequestId_'+uid);
+   alert('Request rejected');
+   render();
+ }
+
+ // on load, show panel if session exists
+ if(sessionStorage.getItem('isAdmin')) document.getElementById('panel').style.display='block';
+ render();
+</script>
+</body>
+</html>

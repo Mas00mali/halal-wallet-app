@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Add Money</title>
+<style>
+ body{font-family:Arial;margin:0;background:#f5f7f6}
+ header{background:#0b7a0b;color:#fff;padding:12px}
+ .container{max-width:800px;margin:12px auto;padding:12px}
+ input{padding:10px;border-radius:6px;border:1px solid #ddd;width:100%}
+ .btn{padding:10px 12px;border:none;border-radius:6px;background:#0b7a0b;color:#fff;cursor:pointer;margin-top:8px}
+ #qr{margin-top:12px}
+</style>
+</head>
+<body>
+<header><strong>Add Money</strong></header>
+<div class="container">
+  <label>Amount (₹)</label>
+  <input id="amt" type="number" placeholder="Enter amount">
+  <label>Mobile (optional)</label>
+  <input id="mobile" type="text" placeholder="Enter mobile for notification">
+  <label>Remark</label>
+  <input id="remark" type="text" placeholder="Remark (Wallet Add)">
+  <button class="btn" id="payBtn">Proceed & Open UPI App</button>
+
+  <div id="qr" style="display:none">
+    <div style="font-weight:700">QR (scan if UPI app not opening)</div>
+    <img id="qrImg" src="" style="width:220px;height:220px;margin-top:8px;border:1px solid #ddd">
+    <div style="margin-top:10px">
+      <button class="btn" id="iPaidBtn">I HAVE PAID (send request)</button>
+    </div>
+  </div>
+
+  <div style="margin-top:14px">
+    <a href="index.html">← Back to Dashboard</a>
+  </div>
+</div>
+
+<script>
+ const UPI = 'paytmqr5m9yhr@ptys';
+ document.getElementById('payBtn').onclick = function(){
+   const a = Number(document.getElementById('amt').value || 0);
+   const mob = document.getElementById('mobile').value.trim();
+   const rem = document.getElementById('remark').value.trim()||'Add Money';
+   if(!a||a<=0){ alert('Enter valid amount'); return; }
+   // store request immediately
+   const uid = localStorage.getItem('userid') || prompt('Enter your userid','user001');
+   localStorage.setItem('userid', uid);
+   localStorage.setItem('mobile', mob);
+   // check existing pending
+   const reqs = JSON.parse(localStorage.getItem('paymentRequests')||'[]');
+   const already = reqs.find(r=>r.userId===uid && r.status==='pending');
+   if(already){ alert('Your previous request is pending'); return; }
+   const req={ id:'REQ'+Date.now(), userId:uid, mobile:mob, amount:a, remark:rem, time:new Date().toLocaleString(), status:'pending' };
+   reqs.push(req); localStorage.setItem('paymentRequests', JSON.stringify(reqs));
+   // set locks & timer 60s
+   localStorage.setItem('paymentLock_'+uid, 'true');
+   localStorage.setItem('lastRequestId_'+uid, req.id);
+   localStorage.setItem('paymentTimerEnd_'+req.id, String(Date.now()+60*1000));
+   // generate upi link and qr
+   const upi = `upi://pay?pa=${encodeURIComponent(UPI)}&pn=${encodeURIComponent('Halal Wallet')}&tn=${encodeURIComponent(rem)}&am=${encodeURIComponent(a)}&cu=INR`;
+   document.getElementById('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data='+encodeURIComponent(upi);
+   document.getElementById('qr').style.display='block';
+   // open UPI intent
+   setTimeout(()=>{ window.location.href = upi; }, 200);
+   alert('UPI app opening; if not, scan the QR. Request sent to admin.');
+   // start a simple timer UI (not shown here)
+ };
+ // i have paid button
+ document.getElementById('iPaidBtn').onclick = function(){
+   alert('Marked as paid. Admin will verify and approve.');
+   location.href='index.html';
+ };
+</script>
+</body>
+</html>

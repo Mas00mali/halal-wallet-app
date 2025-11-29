@@ -1,219 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Halal Wallet Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Service Dashboard</title>
 
-<style>
-body { font-family: Arial, sans-serif; margin: 0; background: #f2f2f2; }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
 
-header {
-    background: #0b7a0b;
-    color: white;
-    padding: 15px;
-    font-size: 22px;
-    text-align: center;
-    font-weight: bold;
-}
+        header {
+            background: #4A90E2;
+            color: white;
+            padding: 18px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            position: relative;
+        }
 
-.top-buttons { 
-    display: flex; 
-    justify-content: space-around; 
-    padding: 10px; 
-    background: #dfffe0;
-}
+        .logout-btn {
+            position: absolute;
+            right: 15px;
+            top: 12px;
+            padding: 8px 14px;
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
 
-.top-buttons button {
-    padding: 10px 20px;
-    background: #0b7a0b;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-}
-.top-buttons button:hover { background: #066406; }
+        .container {
+            padding: 15px;
+        }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
-    gap: 15px;
-    padding: 15px;
-}
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 15px;
+        }
 
-.card {
-    background: white;
-    border-radius: 12px;
-    padding: 12px;
-    text-align: center;
-    border: 2px solid #0b7a0b;
-    cursor: pointer;
-}
-.card img {
-    width: 36px;
-    height: 36px;
-    margin-bottom: 5px;
-}
-.card:hover { background: #eaffea; }
+        .box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 10px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-/* Popup box */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
-}
-.modal-content {
-    background: white;
-    padding: 20px;
-    width: 92%;
-    max-width: 400px;
-    border-radius: 12px;
-}
-.modal-content h3 {
-    text-align: center;
-    margin-bottom: 10px;
-    color: #0b7a0b;
-}
-.modal-content button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    background: #0b7a0b;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-}
-.close-btn {
-    background: red !important;
-}
+        .box:hover {
+            transform: scale(1.05);
+        }
 
-</style>
+        .icon {
+            font-size: 35px;
+            margin-bottom: 8px;
+            color: #4A90E2;
+        }
+
+        /* AEPS sub menu */
+        .aeps-box {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .sub-box {
+            background: #ffffff;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+    </style>
+
+    <script>
+        function openAEPS() {
+            const menu = document.getElementById("aepsMenu");
+
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "block";
+            }
+        }
+
+        function logoutUser() {
+            window.location.href = "login.html";
+        }
+    </script>
+
 </head>
-
 <body>
 
-<header>Halal Wallet Dashboard</header>
+<header>
+    My Dashboard
+    <button class="logout-btn" onclick="logoutUser()">Logout</button>
+</header>
 
-<div class="top-buttons">
-    <button onclick="openPopup('addMoneyModal')">Add Money</button>
-    <button onclick="alert('Profile Section Coming Soon')">Profile</button>
-    <button onclick="alert('Logged Out')">Logout</button>
-</div>
+<div class="container">
 
-<!-- SERVICE GRID -->
-<div class="grid">
+    <div class="grid">
 
-    <div class="card"><img src="icons/mobile.png"><p>Mobile Recharge</p></div>
+        <div class="box">
+            <div class="icon">📱</div>
+            Mobile Recharge
+        </div>
 
-    <div class="card"><img src="icons/dth.png"><p>DTH Recharge</p></div>
+        <div class="box">
+            <div class="icon">📺</div>
+            DTH Recharge
+        </div>
 
-    <div class="card"><img src="icons/electricity.png"><p>Electricity Bill</p></div>
+        <div class="box">
+            <div class="icon">💡</div>
+            Electricity Bill
+        </div>
 
-    <div class="card" onclick="openPopup('sendMoneyModal')">
-        <img src="icons/send.png"><p>Send Money</p>
+        <div class="box">
+            <div class="icon">💸</div>
+            Send Money
+        </div>
+
+        <div class="box" onclick="openAEPS()">
+            <div class="icon">🧾</div>
+            AEPS Service
+        </div>
+
+        <div class="box">
+            <div class="icon">📥</div>
+            Loan Apply
+        </div>
+
+        <div class="box">
+            <div class="icon">🚓</div>
+            Chalan Deposit
+        </div>
+
+        <div class="box">
+            <div class="icon">📤</div>
+            Accept UPI Payment
+        </div>
+
     </div>
 
-    <div class="card" onclick="openPopup('aepsModal')">
-        <img src="icons/aeps.png"><p>AEPS</p>
+    <!-- AEPS Sub Menu -->
+    <div id="aepsMenu" class="aeps-box">
+
+        <div class="sub-box">🔍 Balance Enquiry</div>
+        <div class="sub-box">💰 Cash Withdrawal</div>
+        <div class="sub-box">📤 Cash Deposit</div>
+        <div class="sub-box">📄 Mini Statement</div>
+
     </div>
 
-    <div class="card"><img src="icons/Mudarabah.png"><p>Mudarabah</p></div>
-
-    <div class="card"><img src="icons/challan.png"><p>Challan Deposit</p></div>
-
-    <div class="card"><img src="icons/upi.png"><p>Accept UPI</p></div>
-
 </div>
-
-<!-- SEND MONEY POPUP -->
-<div class="modal" id="sendMoneyModal">
-<div class="modal-content">
-    <h3>Send Money</h3>
-
-    <label>Mobile Number</label>
-    <input type="number" id="smobile" style="width:100%;padding:10px;border:1px solid #0b7a0b;border-radius:8px;">
-
-    <label>Amount</label>
-    <input type="number" id="samount" style="width:100%;padding:10px;border:1px solid #0b7a0b;border-radius:8px;">
-
-    <label>Remark</label>
-    <input type="text" id="sremark" style="width:100%;padding:10px;border:1px solid #0b7a0b;border-radius:8px;">
-
-    <button onclick="sendMoney()">Send</button>
-    <button class="close-btn" onclick="closePopup('sendMoneyModal')">Close</button>
-
-    <div id="sendResult"></div>
-</div>
-</div>
-
-<!-- AEPS POPUP -->
-<div class="modal" id="aepsModal">
-<div class="modal-content">
-    <h3>AEPS Services</h3>
-
-    <button>Balance Enquiry</button>
-    <button>Cash Withdrawal</button>
-    <button>Cash Deposit</button>
-    <button>Mini Statement</button>
-
-    <button class="close-btn" onclick="closePopup('aepsModal')">Close</button>
-</div>
-</div>
-
-<!-- ADD MONEY POPUP -->
-<div class="modal" id="addMoneyModal">
-<div class="modal-content">
-    <h3>Add Money</h3>
-
-    <label>Amount</label>
-    <input type="number" id="addAmount" style="width:100%;padding:10px;border:1px solid #0b7a0b;border-radius:8px;">
-
-    <label>Remark</label>
-    <input type="text" id="addRemark" style="width:100%;padding:10px;border:1px solid #0b7a0b;border-radius:8px;">
-
-    <button onclick="addMoney()">Add</button>
-    <button class="close-btn" onclick="closePopup('addMoneyModal')">Close</button>
-
-    <div id="addResult"></div>
-</div>
-</div>
-
-<script>
-function openPopup(id){ document.getElementById(id).style.display = 'flex'; }
-function closePopup(id){ document.getElementById(id).style.display = 'none'; }
-
-function sendMoney(){
-    let mob = document.getElementById("smobile").value;
-    let amt = document.getElementById("samount").value;
-
-    if(mob === "" || amt === ""){
-        alert("Enter mobile & amount");
-        return;
-    }
-
-    document.getElementById("sendResult").innerHTML =
-      "<p style='color:green;font-weight:bold;margin-top:10px;'>₹" + amt + " Sent Successfully to " + mob + " ✔</p>";
-}
-
-function addMoney(){
-    let amt = document.getElementById("addAmount").value;
-
-    if(amt === ""){
-        alert("Enter amount");
-        return;
-    }
-
-    document.getElementById("addResult").innerHTML =
-      "<p style='color:green;font-weight:bold;margin-top:10px;'>₹" + amt + " Added Successfully ✔</p>";
-}
-</script>
 
 </body>
 </html>

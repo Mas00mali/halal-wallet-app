@@ -42,18 +42,7 @@
             margin: 10px;
             border-radius: 12px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             font-size: 18px;
-        }
-
-        .add-money {
-            background: #4A90E2;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
         }
 
         .container {
@@ -114,18 +103,26 @@
             padding: 10px;
             border-radius: 8px;
         }
+
+        /* Add money buttons */
+        .add-btn {
+            padding: 10px 15px;
+            background: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .add-btn:hover {
+            background: #3f7bc0;
+        }
     </style>
+
 
     <script>
         let wallet = 0;
-
-        function addMoney() {
-            let amount = prompt("Enter amount to add in wallet:");
-            if (amount && !isNaN(amount)) {
-                wallet += Number(amount);
-                document.getElementById("walletBalance").innerText = wallet + " ₹";
-            }
-        }
+        let selectedAmount = 0;
+        let upiID = "paytmqr5m9yhr@ptys";  // Your UPI ID
 
         function openAEPS() {
             const menu = document.getElementById("aepsMenu");
@@ -150,6 +147,32 @@
         function logoutUser() {
             window.location.href = "login.html";
         }
+
+
+        // QUICK PAYMENT BUTTON CLICK
+        function quickAdd(amount) {
+            selectedAmount = amount;
+
+            let upiLink =
+                "upi://pay?pa=" + encodeURIComponent(upiID) +
+                "&pn=" + encodeURIComponent("Wallet Add") +
+                "&tn=" + encodeURIComponent("Add Money") +
+                "&am=" + encodeURIComponent(amount) +
+                "&cu=INR";
+
+            let qrURL = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(upiLink);
+
+            document.getElementById("qrImage").src = qrURL;
+            document.getElementById("qrBox").style.display = "block";
+
+            window.location.href = upiLink;  // Auto open Google Pay / PhonePe
+        }
+
+        function confirmPayment() {
+            wallet += Number(selectedAmount);
+            document.getElementById("walletBalance").innerText = wallet + " ₹";
+            alert("Payment Verified! Wallet Updated Successfully.");
+        }
     </script>
 
 </head>
@@ -162,40 +185,47 @@
 
 <!-- WALLET BAR -->
 <div class="wallet-bar">
-    <div><b>Wallet Balance:</b> <span id="walletBalance">0 ₹</span></div>
-    <div class="add-money" onclick="addMoney()">Add Money</div>
+    <b>Wallet Balance:</b> <span id="walletBalance">0 ₹</span>
 </div>
+
+
+<!-- ADD MONEY SYSTEM -->
+<div style="padding: 15px; margin: 10px; background: white; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+
+    <h3>Add Money</h3>
+
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button onclick="quickAdd(200)" class="add-btn">₹200</button>
+        <button onclick="quickAdd(500)" class="add-btn">₹500</button>
+        <button onclick="quickAdd(1000)" class="add-btn">₹1000</button>
+        <button onclick="quickAdd(2000)" class="add-btn">₹2000</button>
+    </div>
+
+    <div id="qrBox" style="margin-top: 20px; display:none;">
+        <h4>Scan to Pay</h4>
+        <img id="qrImage" width="220" style="border-radius: 10px; border: 1px solid #ccc;">
+        <br><br>
+        <button onclick="confirmPayment()" style="padding: 10px 20px; background:#4A90E2; color:white; border:none; border-radius:8px; cursor:pointer;">Payment Done</button>
+    </div>
+</div>
+
+
 
 <div class="container">
 
     <div class="grid">
 
-        <div class="box">
-            <div class="icon">📱</div>
-            Mobile Recharge
-        </div>
-
-        <div class="box">
-            <div class="icon">📺</div>
-            DTH Recharge
-        </div>
-
-        <div class="box">
-            <div class="icon">💡</div>
-            Electricity Bill
-        </div>
-
-        <div class="box">
-            <div class="icon">💸</div>
-            Send Money
-        </div>
+        <div class="box"><div class="icon">📱</div>Mobile Recharge</div>
+        <div class="box"><div class="icon">📺</div>DTH Recharge</div>
+        <div class="box"><div class="icon">💡</div>Electricity Bill</div>
+        <div class="box"><div class="icon">💸</div>Send Money</div>
 
         <div class="box" onclick="openAEPS()">
             <div class="icon">🧾</div>
             AEPS Service
         </div>
 
-        <div class="box">
+        <div class="box" onclick="openHisab()">
             <div class="icon">📘</div>
             Personal Hisab
         </div>
@@ -217,6 +247,7 @@
 
     </div>
 
+
     <!-- AEPS Sub Menu -->
     <div id="aepsMenu" class="aeps-box">
         <div class="sub-box">🔍 Balance Enquiry</div>
@@ -225,7 +256,8 @@
         <div class="sub-box">📄 Mini Statement</div>
     </div>
 
-    <!-- PERSONAL HISAB BOX -->
+
+    <!-- PERSONAL HISAB -->
     <div id="hisabBox">
         <h3>📘 Personal Hisab (Digital Bahi Khata)</h3>
         <button onclick="addHisabEntry()">➕ Add Entry</button>

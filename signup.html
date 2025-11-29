@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halal Wallet - Signup</title>
+
+<style>
+body { font-family: Arial; background:#f0fff0; padding:20px; }
+.box {
+    max-width:380px; margin:auto; background:white; padding:20px;
+    border-radius:12px; border:2px solid #0b7a0b;
+}
+h2 { text-align:center; color:#0b7a0b; }
+input {
+    width:100%; padding:12px; margin-top:10px;
+    border:1px solid #0b7a0b; border-radius:8px;
+}
+button {
+    width:100%; padding:12px; margin-top:15px;
+    background:#0b7a0b; color:white; border:none; border-radius:8px; font-size:16px;
+}
+a { display:block; text-align:center; margin-top:10px; color:#0b7a0b; }
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Create Account</h2>
+
+    <input type="number" id="aadhaar" placeholder="Aadhaar Number (12 digits)">
+    <input type="text" id="pan" placeholder="PAN Number">
+    <input type="number" id="mobile" placeholder="Mobile Number">
+    <input type="email" id="email" placeholder="Email ID">
+    <input type="password" id="password" placeholder="Create Password">
+
+    <button onclick="signup()">Sign Up</button>
+
+    <a href="login.html">Back to Login</a>
+
+    <p id="msg" style="text-align:center;color:green;margin-top:10px;"></p>
+</div>
+
+<script>
+function signup(){
+    let aadhaar = document.getElementById("aadhaar").value;
+    let pan = document.getElementById("pan").value;
+    let mobile = document.getElementById("mobile").value;
+    let email = document.getElementById("email").value;
+    let pass = document.getElementById("password").value;
+
+    if(aadhaar.length !== 12){
+        alert("Enter valid Aadhaar Number");
+        return;
+    }
+
+    let userid = "HW" + aadhaar.slice(-4);   // AUTO USER ID
+
+    localStorage.setItem("userid", userid);
+    localStorage.setItem("aadhaar", aadhaar);
+    localStorage.setItem("pan", pan);
+    localStorage.setItem("mobile", mobile);
+    localStorage.setItem("email", email);
+    localStorage.setItem("password", pass);
+
+    document.getElementById("msg").innerHTML =
+        "Account Created Successfully!<br>Your User ID is <b>" + userid + "</b>";
+}
+</script>
+
+</body>
+</html>
